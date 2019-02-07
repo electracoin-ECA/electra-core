@@ -32,14 +32,6 @@ for help and more information.
 * Join our Discord server [Discord Server](http://discordapp.com/invite/B8F7Jdv)
 * Join our Telegram group [Telegram](http://t.me/Electracoin )
 
-Building
----------------------
-The following are developer notes on how to build Electra on your native platform. They are not complete guides, but include notes on the necessary libraries, compile flags, etc.
-
-- [OSX Build Notes](build-osx.md)
-- [Unix Build Notes](build-unix.md)
-- [Gitian Building Guide](gitian-building.md)
-
 ### Resources
 
 * Discuss on the [BitcoinTalk](https://bitcointalk.org/index.php?topic=1848351.0)
