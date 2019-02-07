@@ -3,7 +3,7 @@ Electra
 
 Setup
 ---------------------
-[Electra](http://electra.org/wallet) is the original Electra client and it builds the backbone of the network. However, it downloads and stores the entire history of Electra transactions; depending on the speed of your computer and network connection, the synchronization process can take anywhere from a few hours to a day or more. Thankfully you only have to do this once.
+[Electra](https://www.electraproject.org/electra-wallets/) is the original Electra client and it builds the backbone of the network. However, it downloads and stores the entire history of Electra transactions; depending on the speed of your computer and network connection, the synchronization process can take anywhere from one to two hours. Thankfully you only have to do this once.
 
 Running
 ---------------------
@@ -18,7 +18,7 @@ Unpack the files into a directory and run:
 
 ### Windows
 
-Unpack the files into a directory, and then run electra-qt.exe.
+Run the installer, and then run electra-qt.exe.
 
 ### OSX
 
@@ -26,43 +26,19 @@ Drag Electra-Qt to your applications folder, and then run Electra-Qt.
 
 ### Need Help?
 
-* See the documentation at the [Electra Wiki](https://en.bitcoin.it/wiki/Main_Page) ***TODO***
+* See the documentation at the [Bitcoin Wiki](https://en.bitcoin.it/wiki/Main_Page) ***TODO***
 for help and more information.
-* Ask for help on [BitcoinTalk](https://bitcointalk.org/index.php?topic=1262920.0) or on the [Electra Forum](http://forum.electra.org/).
-* Join our Discord server [Discord Server](https://discord.electra.org)
-* Join one of our Slack groups [Electra Slack Groups](https://electra.org/slack-logins/) (Main community is replaced by Discord).
-
-Building
----------------------
-The following are developer notes on how to build Electra on your native platform. They are not complete guides, but include notes on the necessary libraries, compile flags, etc.
-
-- [OSX Build Notes](build-osx.md)
-- [Unix Build Notes](build-unix.md)
-- [Gitian Building Guide](gitian-building.md)
-
-Development
----------------------
-The Electra repo's [root README](https://github.com/electralliumcoin/ElectralliumMN/blob/master/README.md) contains relevant information on the development process and automated testing.
-
-- [Developer Notes](developer-notes.md)
-- [Multiwallet Qt Development](multiwallet-qt.md)
-- [Release Notes](release-notes.md)
-- [Release Process](release-process.md)
-- [Source Code Documentation (External Link)](https://dev.visucore.com/bitcoin/doxygen/) ***TODO***
-- [Translation Process](translation_process.md)
-- [Unit Tests](unit-tests.md)
-- [Unauthenticated REST Interface](REST-interface.md)
-- [Dnsseed Policy](dnsseed-policy.md)
+* Ask for help on our [Website](https://www.electraproject.org/help-support/) or on help-support channel in [Discord](http://discordapp.com/invite/B8F7Jdv).
+* Join our Discord server [Discord Server](http://discordapp.com/invite/B8F7Jdv)
+* Join our Telegram group [Telegram](http://t.me/Electracoin )
 
 ### Resources
 
-* Discuss on the [BitcoinTalk](https://bitcointalk.org/index.php?topic=1262920.0) or the [Electra](http://forum.electra.org/) forum.
-* Join the [Electra-Dev](https://electra-dev.slack.com/) Slack group ([Sign-Up](https://electra-dev.herokuapp.com/)).
+* Discuss on the [BitcoinTalk](https://bitcointalk.org/index.php?topic=1848351.0)
 
 ### Miscellaneous
-- [Assets Attribution](assets-attribution.md)
+
 - [Files](files.md)
-- [Tor Support](tor.md)
 - [Init Scripts (systemd/upstart/openrc)](init.md)
 
 License
