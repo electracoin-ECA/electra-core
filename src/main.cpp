@@ -1938,21 +1938,21 @@ int64_t GetBlockValue(int nHeight, bool fProofOfStake, uint64_t nCoinAge)
     int64_t nSubsidy = 0;
     if (fProofOfStake)
     {
-        if (nHeight > nHardForkBlock) // 1440 blocks per day (~525960 blocks per year)
+        if (nHeight > nHardForkBlock) // 1350 blocks per day (~492750 blocks per year)
         {
-            if (nHeight < nHardForkBlock + 525960) // first year
+            if (nHeight < nHardForkBlock + 492750) // first year
                 nRewardCoinYear = 2.5 * CENT; // 2.5% interest
-            else if (nHeight < nHardForkBlock + 525960 * 2) // second year
+            else if (nHeight < nHardForkBlock + 492750 * 2) // second year
                 nRewardCoinYear = 1.25 * CENT; // 1.25% interest
-            else if (nHeight < nHardForkBlock + 525960 * 3) // third year
+            else if (nHeight < nHardForkBlock + 492750 * 3) // third year
                 nRewardCoinYear = 0.63 * CENT; // 0.63% interest
-            else if (nHeight < nHardForkBlock + 525960 * 4) // fourth year
+            else if (nHeight < nHardForkBlock + 492750 * 4) // fourth year
                 nRewardCoinYear = 0.31 * CENT; // 0.31% interest
-            else if (nHeight < nHardForkBlock + 525960 * 5) // fifth year
+            else if (nHeight < nHardForkBlock + 492750 * 5) // fifth year
                 nRewardCoinYear = 0.16 * CENT; // 0.16% interest
-            else if (nHeight < nHardForkBlock + 525960 * 6) // sixth year
+            else if (nHeight < nHardForkBlock + 492750 * 6) // sixth year
                 nRewardCoinYear = 0.08 * CENT; // 0.08% interest
-            else if (nHeight < nHardForkBlock + 525960 * 7) // seventh year
+            else if (nHeight < nHardForkBlock + 492750 * 7) // seventh year
                 nRewardCoinYear = 0.04 * CENT; // 0.04% interest
             else // eighth year and beyond
                 nRewardCoinYear = 0.02 * CENT; // 0.02% interest
