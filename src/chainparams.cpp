@@ -123,7 +123,7 @@ public:
         pchMessageStart[1] = 0xf1;
         pchMessageStart[2] = 0xa2;
         pchMessageStart[3] = 0xb5;
-        vAlertPubKey = ParseHex("04bfdfdfa55aa9803e843da4917311d13c2d884e29c728de7c91f2ee00e7fc84e822987bb158b61cd4077ef8fca9ef63e7f9ab06b84d49b11d21ff1c1bd8a3ccb9");
+        vAlertPubKey = ParseHex("025208d9c58b8edb90e7eed266d2aed4b5d1c81a6668083a296bf37798acbdc9ba");
         nDefaultPort = 5817;
         bnProofOfWorkLimit = ~uint256(0) >> 20;
         nMaxReorganizationDepth = 100;
@@ -215,8 +215,8 @@ public:
         fHeadersFirstSyncingActive = true;
 
         nPoolMaxTransactions = 3;
-        strSporkKey = "04bfdfdfa55aa9803e843da4917311d13c2d884e29c728de7c91f2ee00e7fc84e822987bb158b61cd4077ef8fca9ef63e7f9ab06b84d49b11d21ff1c1bd8a3ccb9";
-        strSporkKeyOld = "04bfdfdfa55aa9803e843da4917311d13c2d884e29c728de7c91f2ee00e7fc84e822987bb158b61cd4077ef8fca9ef63e7f9ab06b84d49b11d21ff1c1bd8a3ccb9";
+        strSporkKey = "025208d9c58b8edb90e7eed266d2aed4b5d1c81a6668083a296bf37798acbdc9ba";
+        strSporkKeyOld = "025208d9c58b8edb90e7eed266d2aed4b5d1c81a6668083a296bf37798acbdc9ba";
         strObfuscationPoolDummyAddress = "Ebsz2mBcw5hb1vqnBx7TP6CSaWt8sqTiz5";
         nStartMasternodePayments = 1403728576; //Wed, 25 Jun 2014 20:36:16 GMT
 
@@ -259,7 +259,7 @@ public:
         pchMessageStart[1] = 0xe3;
         pchMessageStart[2] = 0xe2;
         pchMessageStart[3] = 0xe1;
-        vAlertPubKey = ParseHex("04bfdfdfa55aa9803e843da4917311d13c2d884e29c728de7c91f2ee00e7fc84e822987bb158b61cd4077ef8fca9ef63e7f9ab06b84d49b11d21ff1c1bd8a3ccb9");
+        vAlertPubKey = ParseHex("025208d9c58b8edb90e7eed266d2aed4b5d1c81a6668083a296bf37798acbdc9ba");
         nDefaultPort = 15817;
         bnProofOfWorkLimit = ~uint256(0) >> 16;
         nEnforceBlockUpgradeMajority = 4320; // 75%
@@ -313,8 +313,8 @@ public:
         fTestnetToBeDeprecatedFieldRPC = true;
 
         nPoolMaxTransactions = 2;
-        strSporkKey = "04bfdfdfa55aa9803e843da4917311d13c2d884e29c728de7c91f2ee00e7fc84e822987bb158b61cd4077ef8fca9ef63e7f9ab06b84d49b11d21ff1c1bd8a3ccb9";
-        strSporkKeyOld = "04bfdfdfa55aa9803e843da4917311d13c2d884e29c728de7c91f2ee00e7fc84e822987bb158b61cd4077ef8fca9ef63e7f9ab06b84d49b11d21ff1c1bd8a3ccb9";
+        strSporkKey = "025208d9c58b8edb90e7eed266d2aed4b5d1c81a6668083a296bf37798acbdc9ba";
+        strSporkKeyOld = "025208d9c58b8edb90e7eed266d2aed4b5d1c81a6668083a296bf37798acbdc9ba";
         strObfuscationPoolDummyAddress = "eNdw2pzf2rirEmCfYGgUQdxJSo7ue6JyLK";
         nStartMasternodePayments = 1420837558; //Fri, 09 Jan 2015 21:05:58 GMT
         nBudget_Fee_Confirmations = 3; // Number of confirmations for the finalization fee. We have to make this very short
