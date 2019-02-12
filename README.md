@@ -36,7 +36,9 @@ Electra is a blockchain using the highly-secure and power efficient NIST5 algori
 <tr> <td>Atomic Swap</td><td>Yes (Barterdex)</td></tr>
 <tr> <td>ICO/Fund raised</td><td>0, Community project</td></tr>
 <tr> <td>Premine</td><td>3.34%</td></tr>
+<tr> <td>Foundation</td><td>YES</td></tr>
 </table>
+https://www.electraproject.org/foundation/
 * The POS is by definition infinite, but our decreasing rewards allow us to approach this target without ever reaching 
 
 ## Work in progress
