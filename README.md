@@ -36,6 +36,7 @@ Electra is a blockchain using the highly-secure and power efficient NIST5 algori
 <tr> <td>Atomic Swap</td><td>Yes (Barterdex)</td></tr>
 <tr> <td>ICO/Fund raised</td><td>0, Community project</td></tr>
 <tr> <td>Premine</td><td>3.34%</td></tr>
+<tr> <td>Foundation</td><td>YES</td></tr>
 </table>
 * The POS is by definition infinite, but our decreasing rewards allow us to approach this target without ever reaching 
 
@@ -51,14 +52,14 @@ Electra is a blockchain using the highly-secure and power efficient NIST5 algori
 | Percentage | Block              | Note          |
 |------------|--------------------|---------------|
 | 50%        | 11811   - 112200   | Year 1        |
-| 2.5%       | 112201  - 322585   | Year 2        |
-| 1.25%      | 322586  - 532970   | Year 3        |
-| 0.63%      | 532971  - 743355   | Year 4        |
-| 0.31%      | 743356  - 953740   | Year 5        |
-| 0.16%      | 953741  - 1164125  | Year 6        |
-| 0.08%      | 1164126 - 1374510  | Year 7        |
-| 0.04%      | 1374511 - 1584895  | Year 8        |
-| 0.02%      | 1584896            | onwards        |
+| 2.5%       | 112201  - 604950   | Year 2        |
+| 1.25%      | 604951  - 1097700  | Year 3        |
+| 0.63%      | 1097701 - 1590450  | Year 4        |
+| 0.31%      | 1590451 - 2083200  | Year 5        |
+| 0.16%      | 2083201 - 2575950  | Year 6        |
+| 0.08%      | 2575951 - 3068700  | Year 7        |
+| 0.04%      | 3068701 - 3561450  | Year 8        |
+| 0.02%      | 3561451            | onwards       |
 
 
 ## Our Mission
