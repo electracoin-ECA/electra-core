@@ -263,7 +263,14 @@ RES_ICONS = \
   qt/res/icons/unit_uelectra.png \
   qt/res/icons/unit_telectra.png \
   qt/res/icons/unit_tmelectra.png \
-  qt/res/icons/unit_tuelectra.png
+  qt/res/icons/unit_tuelectra.png \
+  qt/res/icons/bittrex.png \
+  qt/res/icons/discord.png \
+  qt/res/icons/facebook.png \
+  qt/res/icons/reddit.png \
+  qt/res/icons/telegram.png \
+  qt/res/icons/twitter.png \
+  qt/res/icons/youtube.png
 
 BITCOIN_QT_CPP = \
   qt/bantablemodel.cpp \

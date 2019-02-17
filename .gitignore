@@ -1,5 +1,4 @@
 .vscode/
-.gitignore
 *.sublime-project
 *.sublime-workspace
 todo.txt
@@ -46,8 +45,6 @@ share/setup.nsi
 share/qt/Info.plist
 contrib/devtools/split-debug.sh
 
-src/univalue/gen
-
 src/qt/*.moc
 src/qt/moc_*.cpp
 src/qt/forms/ui_*.h
@@ -65,7 +62,6 @@ src/qt/test/moc*.cpp
 *.pyc
 *.o
 *.o-*
-*.patch
 .electra
 *.a
 *.pb.cc
