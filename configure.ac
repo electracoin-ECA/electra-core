@@ -1053,6 +1053,7 @@ AC_MSG_CHECKING([whether to build libraries])
 AM_CONDITIONAL([BUILD_BITCOIN_LIBS], [test x$build_bitcoin_libs = xyes])
 if test x$build_bitcoin_libs = xyes; then
   AC_DEFINE(HAVE_CONSENSUS_LIB, 1, [Define this symbol if the consensus lib has been built])
+  AC_CONFIG_FILES([libbitcoinconsensus.pc:libbitcoinconsensus.pc.in])
 fi
 AC_MSG_RESULT($build_bitcoin_libs)
 
@@ -1076,6 +1077,32 @@ fi
 if test "x$use_ccache" = "xyes"; then
     AX_CHECK_PREPROC_FLAG([-Qunused-arguments],[CPPFLAGS="-Qunused-arguments $CPPFLAGS"])
 fi
+
+dnl bignum value
+set_bignum=$req_bignum
+case $req_bignum in
+auto)
+  GMP_CHECK
+  if test x"$has_gmp" != x"yes"; then
+    AC_MSG_ERROR([gmp bignum automatically selected but libgmp is not available. Use depends,
+    install libgmp or select an other bignum implementation (ONLY gmp is fully SUPPORTED)])
+  else
+    set_bignum=gmp
+  fi
+  ;;
+gmp)
+  GMP_CHECK
+  if test x"$has_gmp" != x"yes"; then
+    AC_MSG_ERROR([gmp bignum explicitly requested but libgmp is not available])
+  fi
+  ;;
+openssl)
+    AC_MSG_WARN([openssl bignum explicitly requested. This is DEPRECATED.])
+  ;;
+*)
+  AC_MSG_ERROR([invalid bignum implementation selection])
+  ;;
+esac
 
 dnl enable wallet
 AC_MSG_CHECKING([if wallet should be enabled])
@@ -1115,8 +1142,8 @@ else
 fi
 
 dnl these are only used when qt is enabled
+BUILD_TEST_QT=""
 if test x$bitcoin_enable_qt != xno; then
-  BUILD_QT=qt
   dnl enable dbus support
   AC_MSG_CHECKING([whether to build GUI with support for D-Bus])
   if test x$bitcoin_enable_qt_dbus != xno; then
@@ -1146,9 +1173,9 @@ if test x$bitcoin_enable_qt != xno; then
   fi
 
   AC_MSG_CHECKING([whether to build test_electra-qt])
-  if test x$use_tests$bitcoin_enable_qt_test = xyesyes; then
+  if test x$use_gui_tests$bitcoin_enable_qt_test = xyesyes; then
     AC_MSG_RESULT([yes])
-    BUILD_TEST_QT="test"
+    BUILD_TEST_QT="yes"
   else
     AC_MSG_RESULT([no])
   fi
@@ -1168,6 +1195,8 @@ openssl)
   AC_MSG_ERROR([invalid bignum implementation])
   ;;
 esac
+
+AC_MSG_CHECKING([whether to build test_pivx])
 if test x$use_tests = xyes; then
   AC_MSG_RESULT([yes])
   BUILD_TEST="yes"
