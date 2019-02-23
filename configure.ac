@@ -203,7 +203,19 @@ AC_ARG_ENABLE([zmq],
   [use_zmq=$enableval],
   [use_zmq=yes])
 
+AC_ARG_WITH([zerocoin-bignum],
+  [AS_HELP_STRING([--with-zerocoin-bignum=gmp|openssl|auto],
+  [Specify Bignum Implementation. Default is auto])],
+  [req_bignum=$withval],
+  [req_bignum=no])
+
 AC_ARG_WITH([protoc-bindir],[AS_HELP_STRING([--with-protoc-bindir=BIN_DIR],[specify protoc bin path])], [protoc_bin_path=$withval], [])
+
+AC_ARG_ENABLE(man,
+    [AS_HELP_STRING([--disable-man],
+                    [do not install man pages (default is to install)])],,
+    enable_man=no)
+AM_CONDITIONAL(ENABLE_MAN, test "$enable_man" != no)
 
 # Enable debug
 AC_ARG_ENABLE([debug],
