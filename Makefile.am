@@ -193,15 +193,15 @@ block_test_filtered.info: block_test.info
 test_electra_coverage.info: baseline_filtered_combined.info test_electra_filtered.info
 	$(LCOV) -a baseline_filtered.info -a leveldb_baseline_filtered.info -a test_electra_filtered.info -o $@
 
-total_coverage.info:  baseline_filtered_combined.info test_electra_filtered.info block_test_filtered.info
-	$(LCOV) -a baseline_filtered.info -a leveldb_baseline_filtered.info -a test_electra_filtered.info -a block_test_filtered.info -o $@ | $(GREP) "\%" | $(AWK) '{ print substr($$3,2,50) "/" $$5 }' > coverage_percent.txt
+total_coverage.info: test_electra_filtered.info functional_test_filtered.info
+	$(LCOV) -a $(LCOV_OPTS) baseline_filtered.info -a test_electra_filtered.info -a functional_test_filtered.info -o $@ | $(GREP) "\%" | $(AWK) '{ print substr($$3,2,50) "/" $$5 }' > coverage_percent.txt
 
 test_electra.coverage/.dirstamp:  test_electra_coverage.info
-	$(GENHTML) -s $< -o $(@D)
+	$(GENHTML) -s $(LCOV_OPTS) $< -o $(@D)
 	@touch $@
 
 total.coverage/.dirstamp: total_coverage.info
-	$(GENHTML) -s $< -o $(@D)
+	$(GENHTML) -s $(LCOV_OPTS) $< -o $(@D)
 	@touch $@
 
 cov: test_electra.coverage/.dirstamp total.coverage/.dirstamp
@@ -210,7 +210,7 @@ endif
 
 dist_noinst_SCRIPTS = autogen.sh
 
-EXTRA_DIST = $(DIST_SHARE) qa/pull-tester/rpc-tests.sh qa/pull-tester/run-bitcoin-cli qa/rpc-tests $(DIST_DOCS) $(WINDOWS_PACKAGING) $(OSX_PACKAGING)
+EXTRA_DIST = $(DIST_SHARE) qa/pull-tester/rpc-tests.sh qa/pull-tester/run-bitcoin-cli qa/rpc-tests $(DIST_CONTRIB) $(DIST_DOCS) $(WINDOWS_PACKAGING) $(OSX_PACKAGING)
 
 EXTRA_DIST += \
     test/util/bitcoin-util-test.py \
