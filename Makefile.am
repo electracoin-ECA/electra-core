@@ -179,21 +179,20 @@ test_electra.info: baseline_filtered.info
 	$(MAKE) -C src/ check
 	$(LCOV) -c $(LCOV_OPTS) -d $(abs_builddir)/src -t test_electra -o $@
 	$(LCOV) -z $(LCOV_OPTS) -d $(abs_builddir)/src
-	$(LCOV) -z -d $(abs_builddir)/src/leveldb
 
 test_electra_filtered.info: test_electra.info
 	$(abs_builddir)/contrib/filter-lcov.py $(LCOV_FILTER_PATTERN) $< $@
 	$(LCOV) -a $@ $(LCOV_OPTS) -o $@
 
-block_test.info: test_electra_filtered.info
-	$(MKDIR_P) qa/tmp
-	-@TIMEOUT=15 qa/pull-tester/run-bitcoind-for-test.sh $(JAVA) -jar $(JAVA_COMPARISON_TOOL) qa/tmp/compTool 0
-	$(LCOV) -c -d $(abs_builddir)/src --t BitcoinJBlockTest -o $@
-	$(LCOV) -z -d $(abs_builddir)/src
-	$(LCOV) -z -d $(abs_builddir)/src/leveldb
+functional_test.info: test_electra_filtered.info
+	-@TIMEOUT=15 test/functional/test_runner.py $(EXTENDED_FUNCTIONAL_TESTS)
+	
+	$(LCOV) -c $(LCOV_OPTS) -d $(abs_builddir)/src --t functional-tests -o $@
+	$(LCOV) -z $(LCOV_OPTS) -d $(abs_builddir)/src
 
-block_test_filtered.info: block_test.info
-	$(LCOV) -r $< "/usr/include/*" -o $@
+functional_test_filtered.info: functional_test.info
+	$(abs_builddir)/contrib/filter-lcov.py $(LCOV_FILTER_PATTERN) $< $@
+	$(LCOV) -a $@ $(LCOV_OPTS) -o $@
 
 test_electra_coverage.info: baseline_filtered.info test_electra_filtered.info
 	$(LCOV) -a $(LCOV_OPTS) baseline_filtered.info -a test_electra_filtered.info -o $@
