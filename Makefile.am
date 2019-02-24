@@ -169,12 +169,12 @@ if USE_LCOV
 LCOV_FILTER_PATTERN=-p "/usr/include/" -p "src/leveldb/" -p "src/univalue" -p "src/secp256k1"
 
 baseline.info:
-        $(LCOV) -c -i -d $(abs_builddir)/src -o $@
-	
+	$(LCOV) -c -i -d $(abs_builddir)/src -o $@
+
 baseline_filtered.info: baseline.info
 	$(abs_builddir)/contrib/filter-lcov.py $(LCOV_FILTER_PATTERN) $< $@
 	$(LCOV) -a $@ $(LCOV_OPTS) -o $@
-	
+
 test_electra.info: baseline_filtered.info
 	$(MAKE) -C src/ check
 	$(LCOV) -c $(LCOV_OPTS) -d $(abs_builddir)/src -t test_electra -o $@
