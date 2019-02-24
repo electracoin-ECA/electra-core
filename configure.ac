@@ -207,7 +207,7 @@ AC_ARG_WITH([zerocoin-bignum],
   [AS_HELP_STRING([--with-zerocoin-bignum=gmp|openssl|auto],
   [Specify Bignum Implementation. Default is auto])],
   [req_bignum=$withval],
-  [req_bignum=no])
+  [req_bignum=auto])
 
 AC_ARG_WITH([protoc-bindir],[AS_HELP_STRING([--with-protoc-bindir=BIN_DIR],[specify protoc bin path])], [protoc_bin_path=$withval], [])
 
