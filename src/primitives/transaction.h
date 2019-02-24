@@ -240,7 +240,7 @@ public:
     // and bypass the constness. This is safe, as they update the entire
     // structure, including the hash.
     const int32_t nVersion;
-    const unsigned int nTime;
+    const unsigned int nTime = 0;
     std::vector<CTxIn> vin;
     std::vector<CTxOut> vout;
     const uint32_t nLockTime;
@@ -339,7 +339,7 @@ public:
 struct CMutableTransaction
 {
     int32_t nVersion;
-    unsigned int nTime;
+    unsigned int nTime = 0;
     std::vector<CTxIn> vin;
     std::vector<CTxOut> vout;
     uint32_t nLockTime;
