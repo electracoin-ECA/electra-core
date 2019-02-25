@@ -7,6 +7,6 @@ Comment[tr]=Electra, eşten eşe kriptografik sanal para birimi
 Exec=electra-qt %u
 Terminal=false
 Type=Application
-Icon=electra128
+Icon=bitcoin128
 MimeType=x-scheme-handler/electra;
 Categories=Office;Finance;
