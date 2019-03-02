@@ -361,7 +361,8 @@ RES_IMAGES = \
   qt/res/images/walletFrame_bg.png
 
 RES_CSS = \
-  qt/res/css/default.css
+  qt/res/css/default.css \
+  qt/res/css/darktheme.css
 
 RES_MOVIES = $(wildcard $(srcdir)/qt/res/movies/spinner-*.png)
 
