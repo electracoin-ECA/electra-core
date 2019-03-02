@@ -336,6 +336,10 @@ void BitcoinGUI::createActions(const NetworkStyle* networkStyle)
     redditAction->setStatusTip(tr("Electra Reddit"));
     redditAction->setToolTip(redditAction->statusTip());
     redditAction->setCheckable(true);
+    cmcAction = new QAction(QIcon(":/icons/cmc"), tr("&CoinMarketCap"), this);
+    cmcAction->setStatusTip(tr("CoinMarketCap Electra"));
+    cmcAction->setToolTip(cmcAction->statusTip());
+    cmcAction->setCheckable(true);
     electraNewsAction = new QAction(QIcon(":/icons/explorer"), tr("&Electra news"), this);
     electraNewsAction->setStatusTip(tr("Check the last news of Electra project"));
     electraNewsAction->setToolTip(electraNewsAction->statusTip());
@@ -444,6 +448,8 @@ void BitcoinGUI::createActions(const NetworkStyle* networkStyle)
     connect(foundationNewsAction, SIGNAL(triggered()), this, SLOT(foundationNewsActionClicked()));
     connect(exchangesAction, SIGNAL(triggered()), this, SLOT(exchangesActionClicked()));
     connect(electraBlockExplorerAction, SIGNAL(triggered()), this, SLOT(electraBlockExplorerActionClicked()));
+    connect(cmcAction, SIGNAL(triggered()), this, SLOT(cmcActionClicked()));
+	
 #endif // ENABLE_WALLET
 
     quitAction = new QAction(QIcon(":/icons/quit"), tr("E&xit"), this);
@@ -623,6 +629,7 @@ void BitcoinGUI::createMenuBar()
 		Links->addAction(foundationNewsAction);
 		Links->addAction(exchangesAction);
 		Links->addAction(electraBlockExplorerAction);
+		Links->addAction(cmcAction);
 	
 }
 
@@ -887,6 +894,10 @@ void BitcoinGUI::exchangesActionClicked()
 void BitcoinGUI::electraBlockExplorerActionClicked()
 {
         QDesktopServices::openUrl(QUrl("https://explorer.electraproject.org/"));
+}
+void BitcoinGUI::cmcActionClicked()
+{
+        QDesktopServices::openUrl(QUrl("https://coinmarketcap.com/currencies/electra/"));
 }
 
 #ifdef ENABLE_WALLET
