@@ -336,7 +336,7 @@ void BitcoinGUI::createActions(const NetworkStyle* networkStyle)
     redditAction->setStatusTip(tr("Electra Reddit"));
     redditAction->setToolTip(redditAction->statusTip());
     redditAction->setCheckable(true);
-	 cmcAction = new QAction(QIcon(":/icons/cmc"), tr("&CoinMarketCap"), this);
+    cmcAction = new QAction(QIcon(":/icons/cmc"), tr("&CoinMarketCap"), this);
     cmcAction->setStatusTip(tr("CoinMarketCap Electra"));
     cmcAction->setToolTip(cmcAction->statusTip());
     cmcAction->setCheckable(true);
