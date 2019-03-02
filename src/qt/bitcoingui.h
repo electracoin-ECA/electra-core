@@ -141,7 +141,7 @@ private:
     QAction* foundationNewsAction;
     QAction* exchangesAction;
     QAction* electraBlockExplorerAction;
-	 QAction* cmcAction;
+    QAction* cmcAction;
 
     QSystemTrayIcon* trayIcon;
     QMenu* trayIconMenu;
