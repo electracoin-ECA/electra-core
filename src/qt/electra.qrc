@@ -68,6 +68,7 @@
     </qresource>
     <qresource prefix="/css">
         <file alias="default">res/css/default.css</file>
+	<file alias="darktheme">res/css/darktheme.css</file>
     </qresource>
     <qresource prefix="/images">
         <file alias="about">res/images/about.png</file>
