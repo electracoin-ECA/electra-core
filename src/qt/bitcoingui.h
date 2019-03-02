@@ -141,6 +141,7 @@ private:
     QAction* foundationNewsAction;
     QAction* exchangesAction;
     QAction* electraBlockExplorerAction;
+	 QAction* cmcAction;
 
     QSystemTrayIcon* trayIcon;
     QMenu* trayIconMenu;
@@ -217,6 +218,7 @@ public slots:
     void foundationNewsActionClicked();
     void exchangesActionClicked();
     void electraBlockExplorerActionClicked();
+	 void cmcActionClicked();
     
     /** Show incoming transaction notification for new transactions. */
     void incomingTransaction(const QString& date, int unit, const CAmount& amount, const QString& type, const QString& address);

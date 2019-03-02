@@ -65,6 +65,8 @@
 	<file alias="reddit">res/icons/reddit.png</file>
 	<file alias="youtube">res/icons/youtube.png</file>
 	<file alias="twitter">res/icons/twitter.png</file>
+	<file alias="cmc">res/icons/cmc.png</file>
+	
     </qresource>
     <qresource prefix="/css">
         <file alias="default">res/css/default.css</file>
