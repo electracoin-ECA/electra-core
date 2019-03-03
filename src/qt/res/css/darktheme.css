@@ -34,7 +34,7 @@ color:#fff;
 }
 
 .QFrame {
-background-color:transparent;
+background-color:#1c1242;
 border:0px solid #fff;
 }
 
@@ -64,12 +64,28 @@ background-color:#490e68;
 color:#fff;
 }
 
+QHBoxLayout {
+background-color: #1c1242
+}
+
+QVBoxLayout {
+background-color: #1c1242
+}
+
+QWidget #OverviewPage .OverviewPage {
+background-coor:#1c1242
+}
+
 QToolBar {
 background-color: qlineargradient(y1:0, y2: 1, stop: 0 #380349, stop: 0.75 #380349, stop: 0.99 #0f0f1b, stop: 1 #0f0f1b);
 border:0px solid #333;
 padding:1;
 margin:0;
 width: 70px;
+}
+
+QCheckBox {
+color: #000;
 }
 
 QToolBar > QToolButton {
@@ -103,13 +119,17 @@ QToolBar > QToolButton#ToolbarSpacer:hover:!selected {
 background-color: #372f44; /* Do not highlight placeholder on hover */
 }
 
+Spacer {
+background-color: #1c1242;
+}
+
 QToolBar > QToolButton:pressed {
 background-color: qlineargradient(x1:0, x2: 1, stop: 0 #2a1c63, stop: 0.07 #2a1c63, stop: 0.0701 #1c1242, stop: 1 #1c1242);
 color:#fff;
 }
 
 QMessageBox {
-background-color:#fff;
+background-color:#1c1242;
 }
 
 QProgressBar {
@@ -133,6 +153,9 @@ padding-left:5px;
 padding-right:5px;
 }
 
+QLabel#MessageTextLabel {
+background-color: #1c1242;
+}
 QTabWidget {
 background-color:#f2f2f2;
 }
@@ -158,7 +181,7 @@ outline:0; /* Remove Annoying Focus Rectangle */
 }
 
 QGroupBox {
-background-color:#fcfcfc;
+background-color:#1c1242;
 color:#333;
 }
 
@@ -172,6 +195,7 @@ color:#333;
 QLabel { /* Base Text Size & Color */
 font-size:12px;
 color:#fff;
+background-color:#1c1242
 }
 
 .QRadioButton { /* Radio Button Labels */
@@ -179,7 +203,7 @@ color:#333333;
 }
 
 .QCheckBox { /* Checkbox Labels */
-color:#333333;
+color:#fff;
 }
 
 .QCheckBox:hover {
@@ -241,7 +265,7 @@ margin: 2px;
 }
 
 QPushButton:hover {
-background-color: qlineargradient(y1:0, y2: 1, stop: 0 #ffffff, stop: 0.1 #ffffff, stop: 0.101 #A618D7, stop: 0.9 #A618D7, stop: 0.901 #ffffff, stop: 1 #ffffff);
+background-color: qlineargradient(y1:0, y2: 1, stop: 0 #ffffff, stop: 0.05 #ffffff, stop: 0.051 #380349, stop: 0.95 #380349, stop: 0.951 #ffffff, stop: 1 #ffffff);
 }
 
 QPushButton:focus {
@@ -250,9 +274,9 @@ QPushButton:focus {
 }
 
 QPushButton:pressed {
-background-color: #230831;
+background-color: #500169;
 border:1px solid #000000;
-background-color: qlineargradient(y1:0, y2: 1, stop: 0 #A618D7, stop: 0.1 #A618D7, stop: 0.101 #A618D7, stop: 0.9 #A618D7, stop: 0.901 #A618D7, stop: 1 #A618D7);
+/* background-color: qlineargradient(y1:0, y2: 1, stop: 0 #A618D7, stop: 0.1 #A618D7, stop: 0.101 #A618D7, stop: 0.9 #A618D7, stop: 0.901 #A618D7, stop: 1 #A618D7); */
 }
 
 /* Special handling for statusbar-icons (which are partly QPushButtons) */
@@ -285,7 +309,7 @@ color:#818181;
 }
 
 QComboBox:checked {
-background:#f2f2f2;
+backgroun:#f2f2f2;
 }
 
 QComboBox:editable {
@@ -607,10 +631,10 @@ border-radius: 8px;
 /**************************** DIALOG BOXES **********************************************/
 
 QDialog {
-background-color: #3c164f;
+background-color: #1c1242;
 }
 AskPassphraseDialog {
-background-color: #fff;
+background-color: #1c1242;
 }
 
 
@@ -646,7 +670,7 @@ color:#333;
 }
 
 QDialog .QTabWidget .QWidget {
-background-color:#fff;
+background-color:#1c1242;
 color:#333;
 }
 
@@ -704,7 +728,7 @@ border:1px solid #9e9e9e;
 /**************************** SEND AND RECEIVE ADDRESSES DIALOG *****************************/
 
 QWidget#AddressBookPage {
-background-color:#3c164f;
+background-color:#1c1242;
 }
 
 /* QWidget#AddressBookPage QPushButton#newAddress { /* New Address Button */
@@ -728,7 +752,7 @@ min-width:260px;
 
 
 QWidget#PrivacyDialog QFrame {
-background-color:transparent;
+background-color:#1c1242;
 border:0px solid #000;
 }
 
@@ -909,7 +933,7 @@ border:1px solid #372f44;
 QLabel#labelOverviewHeaderLeft {
 font-weight:bold;
 font-size:20px;
-background-color:#ffffff;
+background-color:#1c1242;
 }
 
 QLabel#labelOverviewHeaderRight {
@@ -920,12 +944,12 @@ background-repeat: no-repeat;
 
 QWidget .QFrame#frame_Header { /* Header with Page-Title and ELECTRA-image */
 min-width:400px;
-background-color:#ffffff;
+background-color:#1c1242;
 }
 
 QWidget .QFrame#frame_BG { /* Background */
 min-width:400px;
-background-color:#3c164f;
+background-color:#1c1242;
 }
 
 /**************************** OVERVIEW SCREEN *******************************************/
@@ -937,27 +961,27 @@ background-color:#f8f6f6;
 
 QWidget .QFrame#frame_Content { /* Actual Content */
 min-width:400px;
-background-color:#3c164f;
+background-color:#1c1242;
 }
 
 QWidget .QFrame#frame_Balances { /* Upper left side */
 min-width:400px;
-background-color:#3c164f;
+background-color:#1c1242;
 }
 
 QWidget .QFrame#frame_ZerocoinBalances { /* Lower left side */
 min-width:400px;
-background-color:#3c164f;
+background-color:#1c1242;
 }
 
 QWidget .QFrame#frame_CombinedBalances { /* Lower left side */
 min-width:400px;
-background-color:#3c164f;
+background-color:#1c1242;
 }
 
 QWidget .QFrame#frame_RecentTransactions { /* Right side */
 min-width:400px;
-background-color:#3c164f;
+background-color:#1c1242;
 }
 
 QWidget .QFrame#frame_Balances > .QLabel {
@@ -1298,19 +1322,19 @@ margin-left:0px; /* CSS Voodoo - set to -66px to hide default transaction icons 
 /**************************** SEND DIALOG ***********************************************/
 
 QDialog#SendCoinsDialog {
-background-color:#3c164f;
+background-color:#1c1242;
 }
 
 QDialog#SendCoinsDialog .QFrame#frameCoinControl { /* Coin Control Section */
-background-color:#3c164f;
+background-color:#1c1242;
 }
 
 QDialog#SendCoinsDialog .QFrame#frameFee { /* Coin Control Section */
-background-color:#3c164f;
+background-color:#1c1242;
 }
 
 QDialog#SendCoinsDialog .QFrame#frame_Send { /* Coin Control Section */
-background-color:#3c164f;
+background-color:#1c1242;
 margin-bottom:6px;
 }
 
@@ -1399,7 +1423,7 @@ min-height:27px;
 /**************************** SEND COINS ENTRY ******************************************/
 
 QStackedWidget#SendCoinsEntry {
-background-color:#3c164f;
+background-color:#1c1242;
 color:fff;
 }
 
@@ -1572,16 +1596,16 @@ border:1px solid #333;
 /**************************** RECEIVE COINS *********************************************/
 
 QWidget#ReceiveCoinsDialog {
-background-color:#3c164f;
+background-color:#1c1242;
 color:#fff;
 }
 
 QWidget#ReceiveCoinsDialog .QFrame#frame {
-background-color:#3c164f;
+background-color:#1c1242;
 }
 
 QWidget#ReceiveCoinsDialog .QFrame#frame2 {
-background-color:#3c164f;
+background-color:#1c1242;
 }
 
 QWidget#ReceiveCoinsDialog .QFrame#frame2  > .QLabel { /* Receive Coin Labels */
