@@ -32,7 +32,7 @@ QStatusBar {
 background-color:#ffffff;
 }
 
-.QFrame {
+QFrame {
 background-color:transparent;
 border:0px solid #fff;
 }
