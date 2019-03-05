@@ -72,8 +72,8 @@ QVBoxLayout {
 background-color: #1c1242
 }
 
-QWidget #OverviewPage .OverviewPage {
-background-coor:#1c1242
+QWidget#OverviewPage {
+background-color:#1c1242
 }
 
 QToolBar {
@@ -119,8 +119,9 @@ QToolBar > QToolButton#ToolbarSpacer:hover:!selected {
 background-color: #372f44; /* Do not highlight placeholder on hover */
 }
 
-Spacer {
+Spacer#verticalSpacer {
 background-color: #1c1242;
+color: #1c1242;
 }
 
 QToolBar > QToolButton:pressed {
@@ -156,6 +157,7 @@ padding-right:5px;
 QLabel#messageTextLabel {
 background-color: #1c1242;
 }
+
 QTabWidget {
 background-color:#f2f2f2;
 }
