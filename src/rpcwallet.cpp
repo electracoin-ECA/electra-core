@@ -249,7 +249,7 @@ UniValue setaccount(const UniValue& params, bool fHelp)
     // DS: setaccount returns an error if the address isn't in your wallet and wont create a new address
     // Check if the address is in your wallet
     if (!pwalletMain->mapAddressBook.count(address.Get()))
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid RPD address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid ECA address");
     if (IsMine(*pwalletMain, address.Get()))
         pwalletMain->SetAddressBook(address.Get(), strAccount, "receive");
     else
