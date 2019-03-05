@@ -938,7 +938,7 @@ background-color:#1c1242;
 
 QLabel#labelOverviewHeaderRight {
 qproperty-alignment: 'AlignVCenter | AlignRight';
-background-image: url(':/images/electra_logo_horizontal');
+background-image: url(':/images/electra_logo_horizontal_dark');
 background-repeat: no-repeat;
 }
 
@@ -1424,7 +1424,7 @@ min-height:27px;
 
 QStackedWidget#SendCoinsEntry {
 background-color:#1c1242;
-color:fff;
+color:#fff;
 }
 
 QStackedWidget#SendCoinsEntry .QFrame#SendCoins > .QLabel { /* Send Coin Entry Labels */
@@ -1433,7 +1433,7 @@ font-weight:bold;
 min-height:25px;
 margin-right:5px;
 padding-right:5px;
-color:fff;
+color:#fff;
 }
 
 /* QStackedWidget#SendCoinsEntry .QValidatedLineEdit#payTo { /* Pay To Input Field */
