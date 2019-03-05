@@ -102,6 +102,10 @@ UniValue getnewaddress(const UniValue& params, bool fHelp)
 
     LOCK2(cs_main, pwalletMain->cs_wallet);
 
+    // DS: fix GetAccountAddress not commiting new account to wallet file
+    CWalletDB walletdb(pwalletMain->strWalletFile);
+    CAccount account = CAccount();
+
     // Parse the account first so we don't generate a key if there's an error
     string strAccount;
     if (params.size() > 0)
@@ -110,15 +114,15 @@ UniValue getnewaddress(const UniValue& params, bool fHelp)
     if (!pwalletMain->IsLocked())
         pwalletMain->TopUpKeyPool();
 
+    // DS: fix GetAccountAddress not commiting new account to wallet file
     // Generate a new key that is added to wallet
-    CPubKey newKey;
-    if (!pwalletMain->GetKeyFromPool(newKey))
+    if (!pwalletMain->GetKeyFromPool(account.vchPubKey))
         throw JSONRPCError(RPC_WALLET_KEYPOOL_RAN_OUT, "Error: Keypool ran out, please call keypoolrefill first");
-    CKeyID keyID = newKey.GetID();
 
-    pwalletMain->SetAddressBook(keyID, strAccount, "receive");
+    pwalletMain->SetAddressBook(account.vchPubKey.GetID(), strAccount, "receive");
+    walletdb.WriteAccount(strAccount, account);
 
-    return CBitcoinAddress(keyID).ToString();
+    return CBitcoinAddress(account.vchPubKey.GetID()).ToString();
 }
 
 
@@ -242,16 +246,13 @@ UniValue setaccount(const UniValue& params, bool fHelp)
     if (params.size() > 1)
         strAccount = AccountFromValue(params[1]);
 
-    // Only add the account if the address is yours.
-    if (IsMine(*pwalletMain, address.Get())) {
-        // Detect when changing the account of an address that is the 'unused current key' of another account:
-        if (pwalletMain->mapAddressBook.count(address.Get())) {
-            string strOldAccount = pwalletMain->mapAddressBook[address.Get()].name;
-            if (address == GetAccountAddress(strOldAccount))
-                GetAccountAddress(strOldAccount, true);
-        }
+    // DS: setaccount returns an error if the address isn't in your wallet and wont create a new address
+    // Check if the address is in your wallet
+    if (!pwalletMain->mapAddressBook.count(address.Get()))
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid ECA address");
+    if (IsMine(*pwalletMain, address.Get()))
         pwalletMain->SetAddressBook(address.Get(), strAccount, "receive");
-    } else
+    else
         throw JSONRPCError(RPC_MISC_ERROR, "setaccount can only be used with own address");
 
     return NullUniValue;
@@ -1113,7 +1114,8 @@ UniValue ListReceived(const UniValue& params, bool fByAccounts)
         const CBitcoinAddress& address = item.first;
         const string& strAccount = item.second.name;
         map<CBitcoinAddress, tallyitem>::iterator it = mapTally.find(address);
-        if (it == mapTally.end() && !fIncludeEmpty)
+        // DS: fix listreceivedbyaddress returning sending addresses from address book
+        if ((it == mapTally.end() && !fIncludeEmpty) || !IsMine(*pwalletMain, address.Get()))
             continue;
 
         CAmount nAmount = 0;
@@ -1150,6 +1152,45 @@ UniValue ListReceived(const UniValue& params, bool fByAccounts)
             }
             obj.push_back(Pair("txids", transactions));
             ret.push_back(obj);
+        }
+    }
+
+    // DS: RPC ListReceived will return change addresses not in the address book
+    // Add addresses from mapTally (this will include change addresses which aren't in the address book)
+    BOOST_FOREACH(const PAIRTYPE(CBitcoinAddress, tallyitem)& item, mapTally)
+    {        
+        const CBitcoinAddress& address = item.first;
+        const string& strAccount = "(change)";
+        map<CTxDestination, CAddressBookData>::iterator mi = pwalletMain->mapAddressBook.find(address.Get());
+        if (mi == pwalletMain->mapAddressBook.end()) {
+
+             if (!IsMine(*pwalletMain, address.Get()))
+                continue;
+            int64_t nAmount = 0;
+            int nConf = std::numeric_limits<int>::max();
+            int nBCConf = std::numeric_limits<int>::max();
+            nAmount = item.second.nAmount;
+            nConf = item.second.nConf;
+            nBCConf = item.second.nBCConf;
+            if (!fIncludeEmpty && nAmount == 0)
+                continue;
+            if (fByAccounts)
+            {
+                tallyitem& item = mapAccountTally[strAccount];
+                item.nAmount += nAmount;
+                item.nConf = min(item.nConf, nConf);
+                item.nBCConf = min(item.nBCConf, nBCConf);
+            }
+            else
+            {
+                UniValue obj(UniValue::VOBJ);
+                obj.push_back(Pair("address",       address.ToString()));
+                obj.push_back(Pair("account",       strAccount));
+                obj.push_back(Pair("amount",        ValueFromAmount(nAmount)));
+                obj.push_back(Pair("confirmations", (nConf == std::numeric_limits<int>::max() ? 0 : nConf)));
+                obj.push_back(Pair("bcconfirmations", (nBCConf == std::numeric_limits<int>::max() ? 0 : nBCConf)));
+                ret.push_back(obj);
+            }
         }
     }
 
