@@ -200,7 +200,7 @@ color:#333;
 QLabel { /* Base Text Size & Color */
 font-size:12px;
 color:#fff;
-background-color:#1c1242
+background-color:#1c1242;
 }
 
 .QRadioButton { /* Radio Button Labels */
