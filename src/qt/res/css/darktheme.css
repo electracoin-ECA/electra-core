@@ -33,7 +33,7 @@ background-color:#100416;
 color:#fff;
 }
 
-.QFrame {
+QFrame {
 background-color:#1c1242;
 border:0px solid #fff;
 }
@@ -65,15 +65,15 @@ color:#fff;
 }
 
 QHBoxLayout {
-background-color: #1c1242
+background-color: #1c1242;
 }
 
 QVBoxLayout {
-background-color: #1c1242
+background-color: #1c1242;
 }
 
 QWidget#OverviewPage {
-background-color:#1c1242
+background-color:#1c1242;
 }
 
 QToolBar {
@@ -159,17 +159,20 @@ background-color: #1c1242;
 }
 
 QTabWidget {
-background-color:#f2f2f2;
+/* background-color:#f2f2f2; */
+background-color:#230831;
 }
 
 QTabWidget::pane {
-background-color:#f2f2f2;
+/* background-color:#f2f2f2; */
+background-color:#230831;
 border:1px solid #c2c2c2;
 }
 
 QTabBar {
-background-color:#f2f2f2;
-color:#333;
+background-color:#230831;
+/* background-color:#f2f2f2; */
+color:#fff;
 }
 
 QTabBar::tab:hover:!selected {
@@ -311,7 +314,7 @@ color:#818181;
 }
 
 QComboBox:checked {
-backgroun:#f2f2f2;
+background:#f2f2f2;
 }
 
 QComboBox:editable {
@@ -649,8 +652,9 @@ border: 1px solid #d7d7d7;
 }
 
 QDialog .QTabWidget QTabBar::tab {
-background-color:#f8f6f6;
-color:#333;
+background-color:#230831;
+/* background-color:#f8f6f6; */
+color:#fff;
 padding-left:10px;
 padding-right:10px;
 padding-top:5px;
@@ -667,8 +671,8 @@ border-right: 1px solid #d7d7d7;
 }
 
 QDialog .QTabWidget QTabBar::tab:selected, QDialog .QTabWidget QTabBar::tab:hover {
-background-color:#ffffff;
-color:#333;
+background-color:#380349;
+color:#fff;
 }
 
 QDialog .QTabWidget .QWidget {
