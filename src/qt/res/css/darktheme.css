@@ -153,7 +153,7 @@ padding-left:5px;
 padding-right:5px;
 }
 
-QLabel#MessageTextLabel {
+QLabel#messageTextLabel {
 background-color: #1c1242;
 }
 QTabWidget {
