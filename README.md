@@ -17,53 +17,52 @@
 </p>
 
 # What is Electra?
-Electra is a blockchain using the highly-secure and power efficient NIST5 algorithm. Combining temporary Proof-of-Work with high Proof-of-Stake, the Electra coin (ECA) is unique in its distribution. On June 16, 2017, Electra entered "Super Rewards Bonanza" stage for 24 hours (Blocks 11522-11810). During this time, 95% of the proof-of-work coins were mined. At block 11811, Electra swapped to Proof-of-Stake with an annual interest rate of 50% until block 112200. This created a gold-rush period, promoting the network (or was hoped to) and rapidly increasing the amount of ECA. The 30bil ECA is a soft limit, and will be controlled by the POS Block rewards.
+Electra is a Blockchain using the highly-secure and power-efficient NIST5 algorithm. Combining limited Proof-of-Work with Proof-of-Stake, Electra coin (ECA) is unique in its distribution. On June 16, 2017, Electra entered a "Super Rewards Bonanza" stage for 24 hours (Blocks 11522-11810). During this time, 95% of the Proof-of-Work coins were generated. At Block 11811, Electra swapped to Proof-of-Stake with an annual interest rate of 50%, until Block 112200. This created a gold-rush period, promoting the network and rapidly increasing the amount of ECA. The 30-Billion ECA is a soft limit, and is controlled by the Proof-of-Stake Block Reward Schedule.
+
 
 <a name="specifications"></a>
-## Specifications
+## Technical Specifications
 <table>
 <tr> <td>Ticker</td><td>ECA</td></tr>
 <tr> <td>Algorithm</td><td>NIST5</td></tr>
-<tr> <td>Concensus</td><td>POS 3.0e</td></tr>
-<tr> <td>Maximum supply</td><td>30,000,000,000 * </td></tr>
-<tr> <td>Block time</td><td>64 seconds</td></tr>
-<tr> <td>Block size</td><td>10 Mb max</td></tr>
+<tr> <td>Consensus</td><td>Proof-of-Stake 3.0e</td></tr>
+<tr> <td>Maximum Supply</td><td>30,000,000,000* </td></tr>
+<tr> <td>Block Time</td><td>64 Seconds</td></tr>
+<tr> <td>Block Size</td><td>10 MB</td></tr>
+<tr> <td>Transactions Per Second</td><td>~800</td></tr>
 <tr> <td>Retarget</td><td>Every Block</td></tr>
-<tr> <td>Maturation time</td><td>12 hours</td></tr>
-<tr> <td>Max Coin age</td><td>60 days</td></tr>
-<tr> <td>TPS</td><td>~800</td></tr>
-<tr> <td>Lighting Network</td><td>Yes</td></tr>
+<tr> <td>Coin Maturation Time</td><td>12 Hours</td></tr>
+<tr> <td>Max Coin Age</td><td>60 Days</td></tr>
+<tr> <td>Lightning Network</td><td>Yes</td></tr>
 <tr> <td>Atomic Swap</td><td>Yes (Barterdex)</td></tr>
-<tr> <td>ICO/Fund raised</td><td>0, Community project</td></tr>
+<tr> <td>ICO</td><td>None</td></tr>
 <tr> <td>Premine</td><td>3.34%</td></tr>
-<tr> <td>Foundation</td><td>YES</td></tr>
+<tr> <td>Foundation</td><td>Yes</td></tr>
 </table>
-* The POS is by definition infinite, but our decreasing rewards allow us to approach this target without ever reaching 
+*Proof-of-Stake is by definition infinite. The Block Reward Schedule is such that the limit is never reached.
 
 ## Work in progress
 <table>
-<tr> <td>SEGWIT</td></tr>
+<tr> <td>SegWit</td></tr>
 <tr> <td>BIP 130</td></tr>
 </table>
-    
 
-## PoS Block Rewards
+## Block Reward Schedule
 
-| Percentage | Block              | Note          |
-|------------|--------------------|---------------|
-| 50%        | 11811   - 112200   | Year 1        |
-| 2.5%       | 112201  - 604950   | Year 2        |
-| 1.25%      | 604951  - 1097700  | Year 3        |
-| 0.63%      | 1097701 - 1590450  | Year 4        |
-| 0.31%      | 1590451 - 2083200  | Year 5        |
-| 0.16%      | 2083201 - 2575950  | Year 6        |
-| 0.08%      | 2575951 - 3068700  | Year 7        |
-| 0.04%      | 3068701 - 3561450  | Year 8        |
-| 0.02%      | 3561451            | onwards       |
-
+| Percentage | Block              | Note                  |
+|------------|--------------------|-----------------------|
+| 50%        | 11811   - 112200   | Year 1                |
+| 2.5%       | 112201  - 604950   | Year 2 (Current Rate) |
+| 1.25%      | 604951  - 1097700  | Year 3                |
+| 0.63%      | 1097701 - 1590450  | Year 4                |
+| 0.31%      | 1590451 - 2083200  | Year 5                |
+| 0.16%      | 2083201 - 2575950  | Year 6                |
+| 0.08%      | 2575951 - 3068700  | Year 7                |
+| 0.04%      | 3068701 - 3561450  | Year 8                |
+| 0.02%      | 3561451+           | Permanent Rate        |
 
 ## Our Mission
-Leverage blockchain technology and provide users with fast and secure transactions.
+Leverage Blockchain technology and provide users with fast and secure transactions.
 We believe Blockchain is the future for many purposes such as data storage, payments and operations. Integration of Blockchain for our daily use leads to higher efficiency in applications.
 
 ### Fast, Today
@@ -80,4 +79,4 @@ Electra uses the NIST5 hash, which is chosen as the winning algorithm by the US 
 
 
 # Why NIST5?
-Electra chose to use NIST5 as its hashing algorithm because it has been proven to be more secure and power efficient than other leading algorithms. NIST5 is a combination of the finalists and winner of the US National Institute of Standards and Technology Hash Function Competition(specifically BLAKE, Grøstl, JH, Keccak/SHA-3, and Skein. NIST5 was created fairly recently, and immediately saw use by other coins, but failed to see mainstream adoption.
+Electra chose to use NIST5 as its hashing algorithm because it has been proven to be more secure and power-efficient than other leading algorithms. NIST5 is a combination of the finalists and winner of the US National Institute of Standards and Technology Hash Function Competition (specifically BLAKE, Grøstl, JH, Keccak/SHA-3, and Skein). NIST5 was created fairly recently, and immediately saw use by other coins, but failed to see mainstream adoption.
