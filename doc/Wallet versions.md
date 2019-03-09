@@ -12,7 +12,7 @@
 -Fix withdraw issue (input already used, fix from 2.0.1)
 -Fix building
 
-# 2.0.3
+# 2.0.3 **WIP**
 
 -Add CMC\Electra to Links menu
 -Use new fake stake patch from PIVX
