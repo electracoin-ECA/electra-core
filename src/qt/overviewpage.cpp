@@ -434,9 +434,3 @@ void OverviewPage::hideOrphans(bool fHide)
     if (filter)
         filter->setHideOrphans(fHide);
 }
-
-void OverviewPage::hideOrphans(bool fHide)
-{
-    if (filter)
-        filter->setHideOrphans(fHide);
-}
