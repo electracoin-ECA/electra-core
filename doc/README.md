@@ -11,10 +11,10 @@ The following are some helpful notes on how to run Electra on your native platfo
 
 ### Unix
 
-Unpack the files into a directory and run:
+Unpack the files into a directory and run in terminal:
 
-- bin/32/electra-qt (GUI, 32-bit) or bin/32/electrad (headless, 32-bit)
-- bin/64/electra-qt (GUI, 64-bit) or bin/64/electrad (headless, 64-bit)
+- ./electra-qt (GUI, 32-bit) or ./electrad (headless, 32-bit)
+- ./electra-qt (GUI, 64-bit) or ./electrad (headless, 64-bit)
 
 ### Windows
 
