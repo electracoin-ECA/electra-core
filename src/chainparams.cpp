@@ -64,11 +64,15 @@ static Checkpoints::MapCheckpoints mapCheckpoints =
     (146500, uint256("540485ed391d8fb089eeb28ce9e4b61425b9f95d831855944f98b995e4407cec"))
     (148000, uint256("e51e81dd77a36b5d5db7e273463fc034360d779076d8a31ebfb8dd3d5ebd7a3d"))
     (164000, uint256("23f70286427e411bf633cef753efbe27eb066edcc15bbbb230d4f953023f3c1e"))
-    (170000, uint256("59ea4fe7ee342f2280470def1f122d7c098ace083c3d914013ce7694700cb788"));
+    (170000, uint256("59ea4fe7ee342f2280470def1f122d7c098ace083c3d914013ce7694700cb788"))
+    (182749, uint256("8ae2f1500b56817d8fab7acee7bf83814d56d68f0d07e4fe45384752481023c0"))
+    (182750, uint256("1c84752e501b27cdf561e1e96d0c15dc15925462845a62ee508ae98bb089216d"))
+    (182751, uint256("268f8621be92a8a09d7fa10e8ddf62e4a275230a8212c718dad1d9bc98669271"))
+    (199000, uint256("dc78cfb171a2ca24e235df6ec716d5a052dc89705c5af0393fad359b12753390"));
 static const Checkpoints::CCheckpointData data = {
     &mapCheckpoints,
-    1548609139, // * UNIX timestamp of last checkpoint block
-    486963,     // * total number of transactions between genesis and last checkpoint
+    1551900379, // * UNIX timestamp of last checkpoint block
+    547760,     // * total number of transactions between genesis and last checkpoint
                 //   (the tx=... number in the SetBestChain debug.log lines)
     4000        // * estimated number of transactions per day after checkpoint
 };
@@ -232,7 +236,7 @@ public:
         nMintRequiredConfirmations = 20; //the maximum amount of confirmations until accumulated in 19
         nRequiredAccumulation = 1;
         nDefaultSecurityLevel = 100; //full security level for accumulators
-        nZerocoinHeaderVersion = nUpgradeBlockVersion + 2; //Block headers must be this version once zerocoin is active
+        nZerocoinHeaderVersion = 10; //Block headers must be this version once zerocoin is active
         nZerocoinRequiredStakeDepth = 200; //The required confirmations for a zyce to be stakable
 
         nBudget_Fee_Confirmations = 6; // Number of confirmations for the finalization fee
@@ -268,20 +272,21 @@ public:
         nMinerThreads = 0;
         nTargetTimespan = 10 * 60; // 10 minutes
         nTargetSpacing = 48; // 48 seconds
-        nLastPOWBlock = 200;
+        nLastPOWBlock = 2100000000;
+        nPOSStartBlock = 500;
         nMaturity = 10;
         nMasternodeCountDrift = 4;
-        nModifierUpdateBlock = 51197; //approx Mon, 17 Apr 2017 04:00:00 GMT
+        nModifierUpdateBlock = -1; //approx Mon, 17 Apr 2017 04:00:00 GMT
         nMaxMoneyOut = 43199500 * COIN;
-        nZerocoinStartHeight = 201576;
+        nZerocoinStartHeight = nPOSStartBlock;
         //nZerocoinStartTime = 1501776000;
-        nBlockEnforceSerialRange = 1; //Enforce serial range starting this block
-        nBlockRecalculateAccumulators = 9908000; //Trigger a recalculation of accumulators
-        nBlockFirstFraudulent = 9891737; //First block that bad serials emerged
-        nBlockLastGoodCheckpoint = 9891730; //Last valid accumulator checkpoint
-        nBlockEnforceInvalidUTXO = 9902850; //Start enforcing the invalid UTXO's
+        nBlockEnforceSerialRange = -1; //Enforce serial range starting this block
+        nBlockRecalculateAccumulators = nZerocoinStartHeight + 10; //Trigger a recalculation of accumulators
+        nBlockFirstFraudulent = nZerocoinStartHeight; //First block that bad serials emerged
+        nBlockLastGoodCheckpoint = nZerocoinStartHeight; //Last valid accumulator checkpoint
+        nBlockEnforceInvalidUTXO = -1; //Start enforcing the invalid UTXO's
         nInvalidAmountFiltered = 0; //Amount of invalid coins filtered through exchanges, that should be considered valid
-        nBlockZerocoinV2 = 444020; //!> The block that zerocoin v2 becomes active
+        nBlockZerocoinV2 = nZerocoinStartHeight + 20; //!> The block that zerocoin v2 becomes active
         nEnforceNewSporkKey = 1521604800; //!> Sporks signed after Wednesday, March 21, 2018 4:00:00 AM GMT must use the new spork key
         nRejectOldSporkKey = 1522454400; //!> Reject old spork key after Saturday, March 31, 2018 12:00:00 AM GMT
 

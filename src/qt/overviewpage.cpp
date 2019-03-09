@@ -1,6 +1,6 @@
 // Copyright (c) 2011-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2018 The xx developers
+// Copyright (c) 2015-2018 The PIVX developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -182,13 +182,13 @@ void OverviewPage::getPercentage(CAmount nUnlockedBalance, CAmount nZerocoinBala
     }
 
     double dPercentage = 100.0 - dzPercentage;
-    
+
     szECAPercentage = "(" + QLocale(QLocale::system()).toString(dzPercentage, 'f', nPrecision) + " %)";
     sECAPercentage = "(" + QLocale(QLocale::system()).toString(dPercentage, 'f', nPrecision) + " %)";
-    
+
 }
 
-void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, 
+void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance,
                               const CAmount& zerocoinBalance, const CAmount& unconfirmedZerocoinBalance, const CAmount& immatureZerocoinBalance,
                               const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance)
 {
@@ -208,14 +208,19 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
         nLockedBalance = pwalletMain->GetLockedCoins();
         nWatchOnlyLockedBalance = pwalletMain->GetLockedWatchOnlyBalance();
     }
+
     // ECA Balance
-    CAmount nTotalBalance = balance + unconfirmedBalance + nLockedBalance;
-    CAmount ecaAvailableBalance = balance - immatureBalance;
-    CAmount nTotalWatchBalance = watchOnlyBalance + watchUnconfBalance + watchImmatureBalance;    
-    CAmount nUnlockedBalance = nTotalBalance - nLockedBalance - nLockedBalance; // increment nLockedBalance twice because it was added to
-                                                                                // nTotalBalance above
+    CAmount nTotalBalance = balance + unconfirmedBalance;
+    CAmount ecaAvailableBalance = balance - immatureBalance - nLockedBalance;
+    CAmount nUnlockedBalance = nTotalBalance - nLockedBalance;
+
+    // ECA Watch-Only Balance
+    CAmount nTotalWatchBalance = watchOnlyBalance + watchUnconfBalance;
+    CAmount nAvailableWatchBalance = watchOnlyBalance - watchImmatureBalance - nWatchOnlyLockedBalance;
+
     // zECA Balance
     CAmount matureZerocoinBalance = zerocoinBalance - unconfirmedZerocoinBalance - immatureZerocoinBalance;
+
     // Percentages
     QString szPercentage = "";
     QString sPercentage = "";
@@ -232,7 +237,7 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
     ui->labelTotal->setText(BitcoinUnits::floorHtmlWithUnit(nDisplayUnit, nTotalBalance, false, BitcoinUnits::separatorAlways));
 
     // Watchonly labels
-    ui->labelWatchAvailable->setText(BitcoinUnits::floorHtmlWithUnit(nDisplayUnit, watchOnlyBalance, false, BitcoinUnits::separatorAlways));
+    ui->labelWatchAvailable->setText(BitcoinUnits::floorHtmlWithUnit(nDisplayUnit, nAvailableWatchBalance, false, BitcoinUnits::separatorAlways));
     ui->labelWatchPending->setText(BitcoinUnits::floorHtmlWithUnit(nDisplayUnit, watchUnconfBalance, false, BitcoinUnits::separatorAlways));
     ui->labelWatchImmature->setText(BitcoinUnits::floorHtmlWithUnit(nDisplayUnit, watchImmatureBalance, false, BitcoinUnits::separatorAlways));
     //ui->labelWatchLocked->setText(BitcoinUnits::floorHtmlWithUnit(nDisplayUnit, nWatchOnlyLockedBalance, false, BitcoinUnits::separatorAlways));
@@ -267,30 +272,42 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
     // Only show most balances if they are non-zero for the sake of simplicity
     QSettings settings;
     bool settingShowAllBalances = !settings.value("fHideZeroBalances").toBool();
+
     bool showSumAvailable = settingShowAllBalances || sumTotalBalance != availableTotalBalance;
     ui->labelBalanceTextz->setVisible(showSumAvailable);
     ui->labelBalancez->setVisible(showSumAvailable);
-    bool showECAAvailable = settingShowAllBalances || ecaAvailableBalance != nTotalBalance;
-    bool showWatchOnlyECAAvailable = watchOnlyBalance != nTotalWatchBalance;
-    bool showECAPending = settingShowAllBalances || unconfirmedBalance != 0;
-    bool showWatchOnlyECAPending = watchUnconfBalance != 0;
-    bool showECALocked = settingShowAllBalances || nLockedBalance != 0;
-    bool showWatchOnlyECALocked = nWatchOnlyLockedBalance != 0;
-    bool showImmature = settingShowAllBalances || immatureBalance != 0;
-    bool showWatchOnlyImmature = watchImmatureBalance != 0;
+
     bool showWatchOnly = nTotalWatchBalance != 0;
-    ui->labelBalance->setVisible(showECAAvailable || showWatchOnlyECAAvailable);
+
+    // ECA Available
+    bool showECAAvailable = settingShowAllBalances || ecaAvailableBalance != nTotalBalance;
+    bool showWatchOnlyECAAvailable = showECAAvailable || nAvailableWatchBalance != nTotalWatchBalance;
     ui->labelBalanceText->setVisible(showECAAvailable || showWatchOnlyECAAvailable);
-    ui->labelWatchAvailable->setVisible(showECAAvailable && showWatchOnly);
-    ui->labelUnconfirmed->setVisible(showECAPending || showWatchOnlyECAPending);
+    ui->labelBalance->setVisible(showECAAvailable || showWatchOnlyECAAvailable);
+    ui->labelWatchAvailable->setVisible(showWatchOnlyECAAvailable && showWatchOnly);
+
+    // ECA Pending
+    bool showECAPending = settingShowAllBalances || unconfirmedBalance != 0;
+    bool showWatchOnlyECAPending = showECAPending || watchUnconfBalance != 0;
     ui->labelPendingText->setVisible(showECAPending || showWatchOnlyECAPending);
-    ui->labelWatchPending->setVisible(showECAPending && showWatchOnly);
-    //ui->labelLockedBalance->setVisible(showECALocked || showWatchOnlyECALocked);
+    ui->labelUnconfirmed->setVisible(showECAPending || showWatchOnlyECAPending);
+    ui->labelWatchPending->setVisible(showWatchOnlyECAPending && showWatchOnly);
+
+    // ECA Immature
+    bool showECAImmature = settingShowAllBalances || immatureBalance != 0;
+    bool showWatchOnlyImmature = showECAImmature || watchImmatureBalance != 0;
+    ui->labelImmatureText->setVisible(showECAImmature || showWatchOnlyImmature);
+    ui->labelImmature->setVisible(showECAImmature || showWatchOnlyImmature); // for symmetry reasons also show immature label when the watch-only one is shown
+    ui->labelWatchImmature->setVisible(showWatchOnlyImmature && showWatchOnly); // show watch-only immature balance
+
+    // ECA Locked
+    bool showECALocked = settingShowAllBalances || nLockedBalance != 0;
+    bool showWatchOnlyECALocked = showECALocked || nWatchOnlyLockedBalance != 0;
     //ui->labelLockedBalanceText->setVisible(showECALocked || showWatchOnlyECALocked);
-    //ui->labelWatchLocked->setVisible(showECALocked && showWatchOnly);
-    ui->labelImmature->setVisible(showImmature || showWatchOnlyImmature); // for symmetry reasons also show immature label when the watch-only one is shown
-    ui->labelImmatureText->setVisible(showImmature || showWatchOnlyImmature);
-    ui->labelWatchImmature->setVisible(showImmature && showWatchOnly); // show watch-only immature balance
+    //ui->labelLockedBalance->setVisible(showECALocked || showWatchOnlyECALocked);
+    //ui->labelWatchLocked->setVisible(showWatchOnlyECALocked && showWatchOnly);
+
+    // zECA
     bool showzECAAvailable = settingShowAllBalances || zerocoinBalance != matureZerocoinBalance;
     bool showzECAUnconfirmed = settingShowAllBalances || unconfirmedZerocoinBalance != 0;
     bool showzECAImmature = settingShowAllBalances || immatureZerocoinBalance != 0;
@@ -300,6 +317,8 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
     //ui->labelzBalanceUnconfirmedText->setVisible(showzECAUnconfirmed);
     //ui->labelzBalanceImmature->setVisible(showzECAImmature);
     //ui->labelzBalanceImmatureText->setVisible(showzECAImmature);
+
+    // Percent split
     bool showPercentages = ! (zerocoinBalance == 0 && nTotalBalance == 0);
     ui->labelECAPercent->setVisible(showPercentages);
     //ui->labelzECAPercent->setVisible(showPercentages);
@@ -361,9 +380,9 @@ void OverviewPage::setWalletModel(WalletModel* model)
 
         // Keep up to date with wallet
         setBalance(model->getBalance(), model->getUnconfirmedBalance(), model->getImmatureBalance(),
-                   model->getZerocoinBalance(), model->getUnconfirmedZerocoinBalance(), model->getImmatureZerocoinBalance(), 
+                   model->getZerocoinBalance(), model->getUnconfirmedZerocoinBalance(), model->getImmatureZerocoinBalance(),
                    model->getWatchBalance(), model->getWatchUnconfirmedBalance(), model->getWatchImmatureBalance());
-        connect(model, SIGNAL(balanceChanged(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount)), this, 
+        connect(model, SIGNAL(balanceChanged(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount)), this,
                          SLOT(setBalance(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount)));
 
         connect(model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
