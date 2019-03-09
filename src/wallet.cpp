@@ -1205,7 +1205,7 @@ CAmount CWalletTx::GetLockedCredit() const
         }
 
         // Add masternode collaterals which are handled like locked coins
-        if (fMasterNode && vout[i].nValue == 100000 * COIN) {
+        else if (fMasterNode && vout[i].nValue == 100000 * COIN) {
             nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
         }
 
@@ -1324,7 +1324,7 @@ CAmount CWalletTx::GetLockedWatchOnlyCredit() const
         }
 
         // Add masternode collaterals which are handled like locked coins
-        if (fMasterNode && vout[i].nValue == 100000 * COIN) {
+        else if (fMasterNode && vout[i].nValue == 100000 * COIN) {
             nCredit += pwallet->GetCredit(txout, ISMINE_WATCH_ONLY);
         }
 
@@ -2159,6 +2159,9 @@ bool CWallet::MintableCoins()
     CAmount nBalance = GetBalance();
     CAmount nZecaBalance = GetZerocoinBalance(false);
 
+    if (IsInitialBlockDownload())
+        return false; // No coins to mint if we aren't synced
+
     // Regular ECA
     if (nBalance > 0) {
         if (mapArgs.count("-reservebalance") && !ParseMoney(mapArgs["-reservebalance"], nReserveBalance))
@@ -2958,8 +2961,8 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
     if (nBalance > 0 && nBalance <= nReserveBalance)
         return false;
 
-    if (chainActive.Height() + 1 < Params().WALLET_UPGRADE_BLOCK())
-        return false;
+    // if (chainActive.Height() + 1 < Params().WALLET_UPGRADE_BLOCK() && Params().NetworkID() == CBaseChainParams::MAIN)
+        // return false; // Do not stake until the upgrade block
 
     // Get the list of stakable inputs
     std::list<std::unique_ptr<CStakeInput> > listInputs;
