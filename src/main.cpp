@@ -711,7 +711,7 @@ unsigned int LimitOrphanTxSize(unsigned int nMaxOrphans)
 bool IsStandardTx(const CTransaction& tx, string& reason)
 {
     AssertLockHeld(cs_main);
-    if (tx.nVersion > CTransaction::CURRENT_VERSION || tx.nVersion < 1) {
+    if (tx.nVersion > CTransaction::CURRENT_VERSION || tx.nVersion < 7 || tx.nTime != 0) {
         reason = "version";
         return false;
     }
@@ -999,8 +999,8 @@ bool GetCoinAge(const CTransaction& tx, const unsigned int nTxTime, int nBestHei
             return false; // Transaction timestamp violation
         }
 
-        unsigned int nTimeDiff = nTxTime - (nBestHeight+1>=Params().WALLET_UPGRADE_BLOCK() ? prevblock.nTime : txPrev.nTime); // switch to prevblock.nTime after upgrade
-        if (nTimeDiff > nStakeMaxAgeNew && nBestHeight + 1 >= Params().WALLET_UPGRADE_BLOCK())
+        unsigned int nTimeDiff = nTxTime - (nBestHeight+1>=Params().WALLET_UPGRADE_BLOCK() || Params().NetworkID() != CBaseChainParams::MAIN ? prevblock.nTime : txPrev.nTime); // switch to prevblock.nTime after upgrade
+        if (nTimeDiff > nStakeMaxAgeNew && (nBestHeight + 1 >= Params().WALLET_UPGRADE_BLOCK() || Params().NetworkID() != CBaseChainParams::MAIN))
             nTimeDiff = nStakeMaxAgeNew;
         //else if (nBestHeight + 1 >= nHardForkBlock && nTimeDiff > nStakeMaxAge)
             //nTimeDiff = nStakeMaxAge;
@@ -1347,12 +1347,6 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CValidationState& state, const CTransa
     if (tx.IsCoinStake())
         return state.DoS(100, error("AcceptToMemoryPool: coinstake as individual tx. txid=%s", tx.GetHash().GetHex()),
             REJECT_INVALID, "coinstake");
-
-    // Move to IsStandardTx() after fork completes
-    if (chainActive.Height() + 1 >= Params().WALLET_UPGRADE_BLOCK() && (tx.nVersion != 7 || tx.nTime != 0))
-        return state.DoS(0,
-            error("AcceptToMemoryPool : nonstandard transaction: version"),
-            REJECT_NONSTANDARD, "version");
 
     // Rather not work on nonstandard transactions (unless -testnet/-regtest)
     string reason;
@@ -1779,15 +1773,15 @@ bool AcceptableInputs(CTxMemPool& pool, CValidationState& state, const CTransact
 }
 
 /** Return transaction in tx, and if it was found inside a block, its hash is placed in hashBlock */
-bool GetTransaction(const uint256& hash, CTransaction& txOut, uint256& hashBlock, bool fAllowSlow)
+bool GetTransaction(const uint256& hash, CTransaction& txOut, uint256& hashBlock, bool fAllowSlow, CBlockIndex* blockIndex)
 {
-    CBlockIndex* pindexSlow = NULL;
-    {
-        LOCK(cs_main);
-        {
-            if (mempool.lookup(hash, txOut)) {
-                return true;
-            }
+    CBlockIndex* pindexSlow = blockIndex;
+
+    LOCK(cs_main);
+
+    if (!blockIndex) {
+        if (mempool.lookup(hash, txOut)) {
+            return true;
         }
 
         if (fTxIndex) {
@@ -1888,7 +1882,7 @@ bool ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos)
 
     // Check the header
     if (block.IsProofOfWork()) {
-        if (!CheckProofOfWork(block.GetHash(), block.nVersion, block.nBits))
+        if (!CheckProofOfWork(block.GetHash(), block.nBits))
             return error("ReadBlockFromDisk : Errors in block header");
     }
 
@@ -2973,14 +2967,14 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
 
     //PoW phase redistributed fees to miner. PoS stage destroys fees.
     // CAmount nExpectedMint = GetBlockValue(pindex->nHeight, block.IsProofOfStake());
-    // if (pindex->nHeight < Params().WALLET_UPGRADE_BLOCK() || block.IsProofOfWork())
+    // if ((pindex->nHeight < Params().WALLET_UPGRADE_BLOCK() && Params().NetworkID() == CBaseChainParams::MAIN) || block.IsProofOfWork())
         // nExpectedMint += nFees;
 
     CAmount nExpectedMint = 0;
     uint64_t nCoinAge = 0;
     if (block.IsProofOfStake())
     {
-        if (pindex->nHeight < Params().WALLET_UPGRADE_BLOCK())
+        if (pindex->nHeight < Params().WALLET_UPGRADE_BLOCK() && Params().NetworkID() == CBaseChainParams::MAIN)
         {
             nExpectedMint = nFees;
             if (!GetCoinAge(block.vtx[1], block.vtx[1].nTime, pindex->nHeight-1, nCoinAge))
@@ -3908,20 +3902,23 @@ bool FindUndoPos(CValidationState& state, int nFile, CDiskBlockPos& pos, unsigne
 bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, bool fCheckPOW)
 {
     // Check proof of work matches claimed amount
-    if (fCheckPOW && !CheckProofOfWork(block.GetHash(), block.nVersion, block.nBits))
+    if (fCheckPOW && !CheckProofOfWork(block.GetHash(), block.nBits))
         return state.DoS(50, error("CheckBlockHeader() : proof of work failed"),
             REJECT_INVALID, "high-hash");
 
     if (block.GetHash() != Params().HashGenesisBlock())
     {
-        // Enforce version 8 after mandatory upgrade block
-        if (mapBlockIndex.at(block.hashPrevBlock)->nHeight+1 >= Params().WALLET_UPGRADE_BLOCK())
+        if (Params().NetworkID() == CBaseChainParams::MAIN)
         {
-            if (block.nVersion < Params().WALLET_UPGRADE_VERSION())
-                return state.DoS(50, error("CheckBlockHeader() : block version must be at least %d after upgrade block", Params().WALLET_UPGRADE_VERSION()), REJECT_INVALID, "block-version");
-        } else {
-            if (block.nVersion >= Params().WALLET_UPGRADE_VERSION())
-                return state.DoS(50, error("CheckBlockHeader() : block version must be below %d before upgrade block", Params().WALLET_UPGRADE_VERSION()), REJECT_INVALID, "block-version");
+            // Enforce version 8 after mandatory upgrade block
+            if (mapBlockIndex.at(block.hashPrevBlock)->nHeight+1 >= Params().WALLET_UPGRADE_BLOCK())
+            {
+                if (block.nVersion < Params().WALLET_UPGRADE_VERSION())
+                    return state.DoS(50, error("CheckBlockHeader() : block version must be at least %d after upgrade block", Params().WALLET_UPGRADE_VERSION()), REJECT_INVALID, "block-version");
+            } else {
+                if (block.nVersion >= Params().WALLET_UPGRADE_VERSION())
+                    return state.DoS(50, error("CheckBlockHeader() : block version must be below %d before upgrade block", Params().WALLET_UPGRADE_VERSION()), REJECT_INVALID, "block-version");
+            }
         }
 
         // Version 10 header must be used after Params().Zerocoin_StartHeight(). And never before.
@@ -4095,7 +4092,7 @@ bool CheckWork(const CBlock block, CBlockIndex* const pindexPrev)
 
     unsigned int nBitsRequired;
 
-    if (block.nVersion >= Params().WALLET_UPGRADE_VERSION())
+    if (block.nVersion >= Params().WALLET_UPGRADE_VERSION() || Params().NetworkID() != CBaseChainParams::MAIN)
         nBitsRequired = GetNextWorkRequired(pindexPrev, &block, block.IsProofOfStake());
     else
         nBitsRequired = GetLegacyNextWorkRequired(pindexPrev, &block, block.IsProofOfStake());
@@ -4123,7 +4120,7 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
         return state.DoS(1, error("%s: forked chain older than max reorganization depth (height %d)", __func__, nHeight));
 
     // Check timestamp against prev
-    if (block.nVersion >= Params().WALLET_UPGRADE_VERSION() && block.GetBlockTime() <= pindexPrev->GetMedianTimePast()) {
+    if ((block.nVersion >= Params().WALLET_UPGRADE_VERSION() || Params().NetworkID() != CBaseChainParams::MAIN) && block.GetBlockTime() <= pindexPrev->GetMedianTimePast()) {
         LogPrintf("Block time = %d , GetMedianTimePast = %d \n", block.GetBlockTime(), pindexPrev->GetMedianTimePast());
         return state.Invalid(error("%s : block's timestamp is too early", __func__),
             REJECT_INVALID, "time-too-old");
@@ -4180,7 +4177,7 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
 
     // Enforce block.nVersion=2 rule that the coinbase starts with serialized block height
     // if 750 of the last 1,000 blocks are version 2 or greater (51/100 if testnet):
-    if (block.nVersion >= Params().WALLET_UPGRADE_VERSION() &&
+    if (Params().NetworkID() != CBaseChainParams::MAIN || (Params().HashGenesisBlock() != uint256("0x00000f98da995de0ef1665c7d3338687923c1199230a44ecbdb5cec9306e4f4e") && block.nVersion >= Params().WALLET_UPGRADE_VERSION()) ||
         CBlockIndex::IsSuperMajority(Params().WALLET_UPGRADE_VERSION(), pindexPrev, Params().EnforceBlockUpgradeMajority())) {
         CScript expect = CScript() << nHeight;
         if (block.vtx[0].vin[0].scriptSig.size() < expect.size() ||
@@ -5690,17 +5687,17 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
         if (pfrom->DisconnectOldProtocol(ActiveProtocol(), strCommand))
             return false;
 
+        // Instantly ban old peers once we are at the upgrade block
+        if (pfrom->nVersion < 70915 && (chainActive.Height() + 1 >= Params().WALLET_UPGRADE_BLOCK() || Params().NetworkID() != CBaseChainParams::MAIN)) {
+            LOCK(cs_main);
+            Misbehaving(pfrom->GetId(), 100);
+            return false;
+        }
         if (!vRecv.empty())
             vRecv >> addrFrom >> nNonce;
         if (!vRecv.empty()) {
             vRecv >> LIMITED_STRING(pfrom->strSubVer, 256);
             pfrom->cleanSubVer = SanitizeString(pfrom->strSubVer);
-        }
-        // Instantly ban old peers once we are at the upgrade block
-        if (pfrom->nVersion < 70915 && chainActive.Height() + 1 >= Params().WALLET_UPGRADE_BLOCK()) {
-            LOCK(cs_main);
-            Misbehaving(pfrom->GetId(), 100);
-            return false;
         }
         if (!vRecv.empty())
             vRecv >> pfrom->nStartingHeight;

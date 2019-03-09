@@ -44,7 +44,7 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
 
     if (fProofOfStake) {
         uint256 bnTargetLimit = (~uint256(0) >> 20);
-        
+
         int64_t nActualSpacing = 0;
 
         const CBlockIndex* pindexPrev = GetLastBlockIndex(pindexLast, fProofOfStake);
@@ -62,10 +62,13 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
         bnNew *= ((Params().Interval() - 1) * Params().TargetSpacing() + nActualSpacing + nActualSpacing);
         bnNew /= ((Params().Interval() + 1) * Params().TargetSpacing());
 
-        int height = pindexLast->nHeight + 1;
+        if (Params().NetworkID() == CBaseChainParams::MAIN)
+        {
+            int height = pindexLast->nHeight + 1;
 
-        if (height < (Params().WALLET_UPGRADE_BLOCK()+10) && height >= Params().WALLET_UPGRADE_BLOCK())
-            bnNew *= (int)pow(4.0, (double)(10+Params().WALLET_UPGRADE_BLOCK()-height)); // slash difficulty and gradually ramp back up over 10 blocks
+            if (height < (Params().WALLET_UPGRADE_BLOCK()+10) && height >= Params().WALLET_UPGRADE_BLOCK())
+                bnNew *= (int)pow(4.0, (double)(10+Params().WALLET_UPGRADE_BLOCK()-height)); // slash difficulty and gradually ramp back up over 10 blocks
+        }
 
         if (bnNew <= 0 || bnNew > bnTargetLimit)
             bnNew = bnTargetLimit;
@@ -173,7 +176,7 @@ unsigned int GetLegacyNextWorkRequired(const CBlockIndex* pindexLast, const CBlo
     return bnNew.GetCompact();
 }
 
-bool CheckProofOfWork(uint256 hash, int nVersion, unsigned int nBits)
+bool CheckProofOfWork(uint256 hash, unsigned int nBits)
 {
     bool fNegative;
     bool fOverflow;
@@ -189,7 +192,7 @@ bool CheckProofOfWork(uint256 hash, int nVersion, unsigned int nBits)
         return error("CheckProofOfWork() : nBits below minimum work");
 
     // Check proof of work matches claimed amount
-    if (nVersion >= Params().WALLET_UPGRADE_VERSION() && hash > bnTarget)
+    if (hash.GetCompact() > bnTarget)
         return error("CheckProofOfWork() : hash doesn't match nBits");
 
     return true;
