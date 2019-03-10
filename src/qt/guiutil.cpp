@@ -820,13 +820,16 @@ void restoreWindowGeometry(const QString& strSetting, const QSize& defaultSize, 
     parent->move(pos);
 }
 
-// Check whether a theme is not build-in
-bool isExternal(QString theme)
+// Return name of current UI-theme or default theme if no theme was found
+QString getThemeName()
 {
-    if (theme.isEmpty())
-        return false;
+    QSettings settings;
+    QString theme = settings.value("theme", "").toString();
 
-    return (theme.operator!=("default"));
+    if(!theme.isEmpty()){
+        return theme;
+    }
+    return QString("default");
 }
 
 // Open CSS when configured
@@ -837,20 +840,12 @@ QString loadStyleSheet()
     QString cssName;
     QString theme = settings.value("theme", "").toString();
 
-    if (isExternal(theme)) {
-        // External CSS
-        settings.setValue("fCSSexternal", true);
-        boost::filesystem::path pathAddr = GetDataDir() / "themes/";
-        cssName = pathAddr.string().c_str() + theme + "/css/theme.css";
-    } else {
-        // Build-in CSS
-        settings.setValue("fCSSexternal", false);
-        if (!theme.isEmpty()) {
-            cssName = QString(":/css/") + theme;
-        } else {
-            cssName = QString(":/css/default");
-            settings.setValue("theme", "default");
-        }
+    if(!theme.isEmpty()){
+        cssName = QString(":/css/") + theme;
+    }
+    else {
+        cssName = QString(":/css/default");
+        settings.setValue("theme", "default");
     }
 
     QFile qFile(cssName);
