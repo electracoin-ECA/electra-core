@@ -209,8 +209,8 @@ BitcoinGUI::BitcoinGUI(const NetworkStyle* networkStyle, QWidget* parent) : QMai
     labelBlocksIcon = new QLabel();
 #ifdef ENABLE_WALLET
     if (enableWallet) {
-        frameBlocksLayout->addStretch();
-        frameBlocksLayout->addWidget(unitDisplayControl);
+//        frameBlocksLayout->addStretch();
+//        frameBlocksLayout->addWidget(unitDisplayControl);
         frameBlocksLayout->addStretch();
         frameBlocksLayout->addWidget(labelEncryptionIcon);
         frameBlocksLayout->addStretch();
@@ -704,7 +704,7 @@ void BitcoinGUI::setClientModel(ClientModel* clientModel)
             walletFrame->setClientModel(clientModel);
         }
 #endif // ENABLE_WALLET
-        unitDisplayControl->setOptionsModel(clientModel->getOptionsModel());
+//        unitDisplayControl->setOptionsModel(clientModel->getOptionsModel());
 //        connect(clientModel->getOptionsModel(), SIGNAL(zeromintEnableChanged(bool)), this, SLOT(setAutoMintStatus()));
 
         //Show trayIcon
