@@ -3998,7 +3998,7 @@ void CWallet::AutoZeromint()
     if (GetAdjustedTime() > GetSporkValue(SPORK_16_ZEROCOIN_MAINTENANCE_MODE) || chainActive.Height() <= Params().Zerocoin_Block_V2_Start()) return;
 
     // Wait until blockchain + masternodes are fully synced and wallet is unlocked.
-    if (!masternodeSync.IsSynced() || IsLocked()){
+    if (IsInitialBlockDownload() /*!masternodeSync.IsSynced()*/ || IsLocked()) {
         // Re-adjust startup time in case syncing needs a long time.
         nStartupTime = GetAdjustedTime();
         return;
@@ -5161,6 +5161,9 @@ string CWallet::MintZerocoin(CAmount nValue, CWalletTx& wtxNew, vector<CDetermin
 
     if (nValue + Params().Zerocoin_MintFee() > GetBalance())
         return _("Insufficient funds");
+
+    if (chainActive.Height() <= Params().Zerocoin_Block_V2_Start())
+        return _("Zerocoin protocol is not yet active!");
 
     CReserveKey reservekey(this);
     int64_t nFeeRequired;
