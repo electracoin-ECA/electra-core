@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_SUITE(script_tests)
 CMutableTransaction BuildCreditingTransaction(const CScript& scriptPubKey)
 {
     CMutableTransaction txCredit;
-    txCredit.nVersion = 1;
+    txCredit.nVersion = 7;
     txCredit.nLockTime = 0;
     txCredit.vin.resize(1);
     txCredit.vout.resize(1);
@@ -81,7 +81,7 @@ CMutableTransaction BuildCreditingTransaction(const CScript& scriptPubKey)
 CMutableTransaction BuildSpendingTransaction(const CScript& scriptSig, const CMutableTransaction& txCredit)
 {
     CMutableTransaction txSpend;
-    txSpend.nVersion = 1;
+    txSpend.nVersion = 7;
     txSpend.nLockTime = 0;
     txSpend.vin.resize(1);
     txSpend.vout.resize(1);
