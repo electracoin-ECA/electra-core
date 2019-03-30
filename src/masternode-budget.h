@@ -245,7 +245,7 @@ public:
     bool PropExists(uint256 nHash);
     TrxValidationStatus IsTransactionValid(const CTransaction& txNew, int nBlockHeight);
     std::string GetRequiredPaymentsString(int nBlockHeight);
-    void FillBlockPayee(CMutableTransaction& txNew, CAmount nFees, bool fProofOfStake);
+    void FillBlockPayee(CMutableTransaction& txNew, CAmount nFees, bool fProofOfStake, CAmount& nBlockValue);
 
     void CheckOrphanVotes();
     void Clear()
@@ -371,7 +371,7 @@ public:
 
     // Verify and vote on finalized budget
     void CheckAndVote();
-    //total pivx paid out by this budget
+    //total electra paid out by this budget
     CAmount GetTotalPayout();
     //vote on this finalized budget as a masternode
     void SubmitVote();

@@ -4,16 +4,22 @@
 // Copyright (c) 2018 The Electra developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
-
 #ifndef BITCOIN_BIGNUM_H
 #define BITCOIN_BIGNUM_H
 
+#if defined HAVE_CONFIG_H
+#include "config/electra-config.h"
+#endif
+
 #include <stdexcept>
 #include <vector>
+#include <limits.h>
 #include <openssl/bn.h>
+
 #include "serialize.h"
 #include "uint256.h"
 #include "version.h"
+#include "random.h"
 
 /** Errors thrown by the bignum class */
 class bignum_error : public std::runtime_error
@@ -21,7 +27,6 @@ class bignum_error : public std::runtime_error
 public:
     explicit bignum_error(const std::string& str) : std::runtime_error(str) {}
 };
-
 
 /** RAII encapsulated BN_CTX (OpenSSL bignum context) */
 class CAutoBN_CTX
@@ -49,7 +54,6 @@ public:
     BN_CTX** operator&() { return &pctx; }
     bool operator!() { return (pctx == NULL); }
 };
-
 
 /** C++ wrapper for BIGNUM (OpenSSL bignum) */
 class CBigNum
@@ -84,19 +88,17 @@ public:
     }
 
     //CBigNum(char n) is not portable.  Use 'signed char' or 'unsigned char'.
-    CBigNum(signed char n)      { bn = BN_new(); if (n >= 0) setulong(n); else setint64(n); }
-    CBigNum(short n)            { bn = BN_new(); if (n >= 0) setulong(n); else setint64(n); }
-    CBigNum(int n)              { bn = BN_new(); if (n >= 0) setulong(n); else setint64(n); }
-    CBigNum(long n)             { bn = BN_new(); if (n >= 0) setulong(n); else setint64(n); }
-#ifdef __APPLE__	
-    CBigNum(int64_t n)            { bn = BN_new(); setint64(n); }
-#endif
-    CBigNum(unsigned char n)    { bn = BN_new(); setulong(n); }
-    CBigNum(unsigned short n)   { bn = BN_new(); setulong(n); }
-    CBigNum(unsigned int n)     { bn = BN_new(); setulong(n); }
-    CBigNum(unsigned long n)    { bn = BN_new(); setulong(n); }
-  //  CBigNum(uint64_t n)           { bn = BN_new(); setuint64(n); }
-    explicit CBigNum(uint256 n) { bn = BN_new(); setuint256(n); }
+    CBigNum(signed char n)        { bn = BN_new(); if (n >= 0) setulong(n); else setint64(n); }
+    CBigNum(short n)              { bn = BN_new(); if (n >= 0) setulong(n); else setint64(n); }
+    CBigNum(int n)                { bn = BN_new(); if (n >= 0) setulong(n); else setint64(n); }
+    CBigNum(long n)               { bn = BN_new(); if (n >= 0) setulong(n); else setint64(n); }
+    CBigNum(long long n)          { bn = BN_new(); setint64(n); }
+    CBigNum(unsigned char n)      { bn = BN_new(); setulong(n); }
+    CBigNum(unsigned short n)     { bn = BN_new(); setulong(n); }
+    CBigNum(unsigned int n)       { bn = BN_new(); setulong(n); }
+    CBigNum(unsigned long n)      { bn = BN_new(); setulong(n); }
+    CBigNum(unsigned long long n) { bn = BN_new(); setuint64(n); }
+    explicit CBigNum(uint256 n)   { bn = BN_new(); setuint256(n); }
 
     explicit CBigNum(const std::vector<unsigned char>& vch)
     {
@@ -171,7 +173,7 @@ public:
 
         if (sn < (int64_t)0)
         {
-            // Since the minimum signed integer cannot be represented as positive so long as its type is signed, 
+            // Since the minimum signed integer cannot be represented as positive so long as its type is signed,
             // and it's not well-defined what happens if you make it unsigned before negating it,
             // we instead increment the negative integer by 1, convert it, then increment the (now positive) unsigned integer by 1 to compensate
             n = -(sn + 1);
@@ -264,6 +266,9 @@ public:
 
     uint256 getuint256() const
     {
+        if(bitSize() > 256){
+            throw std::range_error("cannot convert to uint256, bignum longer than 256 bits");
+        }
         unsigned int nSize = BN_bn2mpi(bn, NULL);
         if (nSize < 4)
             return 0;
@@ -302,71 +307,6 @@ public:
         vch.erase(vch.begin(), vch.begin() + 4);
         reverse(vch.begin(), vch.end());
         return vch;
-    }
-
-    // The "compact" format is a representation of a whole
-    // number N using an unsigned 32bit number similar to a
-    // floating point format.
-    // The most significant 8 bits are the unsigned exponent of base 256.
-    // This exponent can be thought of as "number of bytes of N".
-    // The lower 23 bits are the mantissa.
-    // Bit number 24 (0x800000) represents the sign of N.
-    // N = (-1^sign) * mantissa * 256^(exponent-3)
-    //
-    // Satoshi's original implementation used BN_bn2mpi() and BN_mpi2bn().
-    // MPI uses the most significant bit of the first byte as sign.
-    // Thus 0x1234560000 is compact (0x05123456)
-    // and  0xc0de000000 is compact (0x0600c0de)
-    // (0x05c0de00) would be -0x40de000000
-    //
-    // Bitcoin only uses this "compact" format for encoding difficulty
-    // targets, which are unsigned 256bit quantities.  Thus, all the
-    // complexities of the sign bit and using base 256 are probably an
-    // implementation accident.
-    //
-    // This implementation directly uses shifts instead of going
-    // through an intermediate MPI representation.
-    CBigNum& SetCompact(unsigned int nCompact)
-    {
-        unsigned int nSize = nCompact >> 24;
-        bool fNegative     =(nCompact & 0x00800000) != 0;
-        unsigned int nWord = nCompact & 0x007fffff;
-        if (nSize <= 3)
-        {
-            nWord >>= 8*(3-nSize);
-            BN_set_word(bn, nWord);
-        }
-        else
-        {
-            BN_set_word(bn, nWord);
-            BN_lshift(bn, bn, 8*(nSize-3));
-        }
-        BN_set_negative(bn, fNegative);
-        return *this;
-    }
-
-    unsigned int GetCompact() const
-    {
-        unsigned int nSize = BN_num_bytes(bn);
-        unsigned int nCompact = 0;
-        if (nSize <= 3)
-            nCompact = BN_get_word(bn) << 8*(3-nSize);
-        else
-        {
-            CBigNum cbn;
-            BN_rshift(cbn.bn, bn, 8*(nSize-3));
-            nCompact = BN_get_word(cbn.bn);
-        }
-        // The 0x00800000 bit denotes the sign.
-        // Thus, if it is already set, divide the mantissa by 256 and increase the exponent.
-        if (nCompact & 0x00800000)
-        {
-            nCompact >>= 8;
-            nSize++;
-        }
-        nCompact |= nSize << 24;
-        nCompact |= (BN_is_negative(bn) ? 0x00800000 : 0);
-        return nCompact;
     }
 
     void SetDec(const std::string& str)
@@ -567,7 +507,7 @@ public:
    /**
     * Miller-Rabin primality test on this element
     * @param checks: optional, the number of Miller-Rabin tests to run
-    * 			 	default causes error rate of 2^-80.
+    *                          default causes error rate of 2^-80.
     * @return true if prime
     */
     bool isPrime(const int checks=BN_prime_checks) const {
@@ -600,7 +540,7 @@ public:
     CBigNum& operator-=(const CBigNum& b)
     {
         if (!BN_sub(bn, bn, b.bn))
-	    throw bignum_error("CBigNum::operator-= : BN_sub failed");
+            throw bignum_error("CBigNum::operator-= : BN_sub failed");
         return *this;
     }
 
@@ -697,8 +637,6 @@ public:
     friend inline bool operator<(const CBigNum& a, const CBigNum& b);
     friend inline bool operator>(const CBigNum& a, const CBigNum& b);
 };
-
-
 
 inline const CBigNum operator+(const CBigNum& a, const CBigNum& b)
 {
