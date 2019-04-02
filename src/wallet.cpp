@@ -2121,7 +2121,7 @@ bool CWallet::SelectStakeCoins(std::list<std::unique_ptr<CStakeInput> >& listInp
     }
 
     //zECA
-    if (GetBoolArg("-zecastake", true) && chainActive.Height() > Params().Zerocoin_Block_V2_Start() && !IsSporkActive(SPORK_16_ZEROCOIN_MAINTENANCE_MODE)) {
+    if (GetBoolArg("-zecastake", true) && chainActive.Height() >= Params().Zerocoin_Block_V2_Start() && !IsSporkActive(SPORK_16_ZEROCOIN_MAINTENANCE_MODE)) {
         //Only update zECA set once per update interval
         bool fUpdate = false;
         static int64_t nTimeLastUpdate = 0;
@@ -2158,9 +2158,6 @@ bool CWallet::MintableCoins()
     LOCK(cs_main);
     CAmount nBalance = GetBalance();
     CAmount nZecaBalance = GetZerocoinBalance(false);
-
-    if (IsInitialBlockDownload())
-        return false; // No coins to mint if we aren't synced
 
     // Regular ECA
     if (nBalance > 0) {
@@ -2939,7 +2936,7 @@ bool CWallet::CreateTransaction(CScript scriptPubKey, const CAmount& nValue, CWa
 }
 
 // ppcoin: create coin stake transaction
-bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int64_t nSearchInterval, CMutableTransaction& txNew, unsigned int& nTxNewTime)
+bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int64_t nSearchInterval, CMutableTransaction& txNew, unsigned int& nTxNewTime, const int& nHeight)
 {
     // The following split & combine thresholds are important to security
     // Should not be adjusted if you don't understand the consequences
@@ -3008,20 +3005,27 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
             LogPrintf("CreateCoinStake : kernel found\n");
             nCredit += stakeInput->GetValue();
 
+            uint256 hashTxOut = txNew.GetHash();
+            CTxIn in;
+            if (!stakeInput->CreateTxIn(this, in, hashTxOut)) {
+                LogPrintf("%s : failed to create TxIn\n", __func__);
+                txNew.vin.clear();
+                txNew.vout.clear();
+                nCredit = 0;
+                continue;
+            }
+            txNew.vin.emplace_back(in);
+
             // Calculate reward
-            CAmount nReward;
+            CAmount nBlockValue;
             uint64_t nCoinAge = 0;
-            unsigned int nTimeDiff = nTxNewTime - block.GetBlockTime();
-            if (nTimeDiff > nStakeMaxAgeNew)
-                nTimeDiff = nStakeMaxAgeNew;
-            uint256 bnCentSecond = uint256(stakeInput->GetValue()) * nTimeDiff;
-            //LogPrintf("CreateCoinStake() : coin age nValueIn=%"PRId64" nTimeDiff=%d bnCentSecond=%s\n", stakeInput->GetValue(), nTimeDiff, bnCentSecond.ToString().c_str());
-            uint256 bnCoinDay = bnCentSecond / COIN / (24 * 60 * 60);
-            LogPrintf("CreateCoinStake() : coin age bnCoinDay=%s\n", bnCoinDay.ToString().c_str());
-            nCoinAge = bnCoinDay.Get64();
+
+            if (!GetCoinAge(txNew, nTxNewTime, nHeight, nCoinAge))
+                return error("CreateCoinStake : failed to calculate coin age");
             //LogPrintf("CreateCoinStake() : nCoinAge=%"PRId64"\n", nCoinAge);
-            nReward = GetBlockValue(chainActive.Height() + 1, true, nCoinAge);
-            nCredit += nReward;
+
+            nBlockValue = GetBlockValue(nHeight, true, nCoinAge);
+            nCredit += nBlockValue;
 
             // Create the output transaction(s)
             vector<CTxOut> vout;
@@ -3047,18 +3051,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
                 return error("CreateCoinStake : exceeded coinstake size limit");
 
             //Masternode payment
-            FillBlockPayee(txNew, nMinFee, true, stakeInput->IsZECA());
-
-            uint256 hashTxOut = txNew.GetHash();
-            CTxIn in;
-            if (!stakeInput->CreateTxIn(this, in, hashTxOut)) {
-                LogPrintf("%s : failed to create TxIn\n", __func__);
-                txNew.vin.clear();
-                txNew.vout.clear();
-                nCredit = 0;
-                continue;
-            }
-            txNew.vin.emplace_back(in);
+            FillBlockPayee(txNew, nMinFee, true, stakeInput->IsZECA(), nBlockValue);
 
             //Mark mints as spent
             if (stakeInput->IsZECA()) {
@@ -3995,10 +3988,10 @@ bool CWallet::GetDestData(const CTxDestination& dest, const std::string& key, st
 void CWallet::AutoZeromint()
 {
     // Don't bother Autominting if Zerocoin Protocol isn't active
-    if (GetAdjustedTime() > GetSporkValue(SPORK_16_ZEROCOIN_MAINTENANCE_MODE) || chainActive.Height() <= Params().Zerocoin_Block_V2_Start()) return;
+    if (GetAdjustedTime() > GetSporkValue(SPORK_16_ZEROCOIN_MAINTENANCE_MODE) || chainActive.Height() < Params().Zerocoin_Block_V2_Start()) return;
 
     // Wait until blockchain + masternodes are fully synced and wallet is unlocked.
-    if (!masternodeSync.IsSynced() || IsLocked()){
+    if (IsInitialBlockDownload() /*!masternodeSync.IsSynced()*/ || IsLocked()) {
         // Re-adjust startup time in case syncing needs a long time.
         nStartupTime = GetAdjustedTime();
         return;
@@ -5161,6 +5154,9 @@ string CWallet::MintZerocoin(CAmount nValue, CWalletTx& wtxNew, vector<CDetermin
 
     if (nValue + Params().Zerocoin_MintFee() > GetBalance())
         return _("Insufficient funds");
+
+    if (chainActive.Height() < Params().Zerocoin_Block_V2_Start())
+        return _("Zerocoin protocol is not yet active!");
 
     CReserveKey reservekey(this);
     int64_t nFeeRequired;

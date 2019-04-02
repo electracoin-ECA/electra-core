@@ -132,6 +132,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
         {"spendzerocoin", 1},
         {"spendzerocoin", 2},
         {"spendzerocoin", 3},
+        {"spendrawzerocoin", 2},
         {"importzerocoins", 0},
         {"exportzerocoins", 0},
         {"exportzerocoins", 1},
@@ -143,7 +144,10 @@ static const CRPCConvertParam vRPCConvertParams[] =
         {"searchdzeca", 1},
         {"searchdzeca", 2},
         {"getaccumulatorvalues", 0},
-        {"getfeeinfo", 0}
+        {"getserials", 0},
+        {"getserials", 1},
+        {"getserials", 2},
+        {"getfeeinfo", 0},
     };
 
 class CRPCConvertTable
