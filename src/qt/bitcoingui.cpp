@@ -881,15 +881,15 @@ void BitcoinGUI::redditActionClicked()
 }
 void BitcoinGUI::electraNewsActionClicked()
 {
-        QDesktopServices::openUrl(QUrl("https://www.electraproject.org/electracoin-news/"));
+        QDesktopServices::openUrl(QUrl("https://electraproject.org/electracoin-news/"));
 }
 void BitcoinGUI::foundationNewsActionClicked()
 {
-        QDesktopServices::openUrl(QUrl("https://www.electraproject.org/foundation-news/"));
+        QDesktopServices::openUrl(QUrl("https://electraproject.org/foundation-news/"));
 }
 void BitcoinGUI::exchangesActionClicked()
 {
-        QDesktopServices::openUrl(QUrl("https://www.electraproject.org/where-can-i-buy-electracoin/"));
+        QDesktopServices::openUrl(QUrl("https://electraproject.org/exchanges/"));
 }
 void BitcoinGUI::electraBlockExplorerActionClicked()
 {
