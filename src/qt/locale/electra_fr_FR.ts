@@ -594,7 +594,7 @@
     </message>
     <message>
         <source>&amp;Multisignature signing...</source>
-        <translation>&amp; multi-signatures</translation>
+        <translation>&amp; Multi-signatures</translation>
     </message>
     <message>
         <source>Sign with a multisignature address</source>
@@ -2159,7 +2159,7 @@ Immature: confirmé, mais moins de 1 monnayé de la même dénomination après s
     </message>
     <message>
         <source>Locked:</source>
-        <translation>Vérrouillé:</translation>
+        <translation>Verrouillé:</translation>
     </message>
     <message>
         <source>Unconfirmed:</source>
@@ -5050,7 +5050,7 @@ Soit monnayer des dénominations plus élevées (moins d'entrées sont nécessai
     </message>
     <message>
         <source>Wallet is locked.</source>
-        <translation>Le portefeuille est vérrouillé.</translation>
+        <translation>Le portefeuille est verrouillé.</translation>
     </message>
     <message>
         <source>Wallet needed to be rewritten: restart ELECTRA Core to complete</source>

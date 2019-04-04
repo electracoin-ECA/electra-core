@@ -278,7 +278,7 @@ public:
         nTargetTimespan = 10 * 60; // 10 minutes
         nTargetSpacing = 48; // 48 seconds
         nLastPOWBlock = 2100000000;
-        nPOSStartBlock = 500;
+        nPOSStartBlock = 50;
         nMaturity = 10;
         nMasternodeCountDrift = 4;
         nModifierUpdateBlock = -1; //approx Mon, 17 Apr 2017 04:00:00 GMT

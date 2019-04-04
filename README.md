@@ -32,7 +32,7 @@ Electra is a Blockchain using the highly-secure and power-efficient NIST5 algori
 <tr> <td>Transactions Per Second</td><td>~800</td></tr>
 <tr> <td>Retarget</td><td>Every Block</td></tr>
 <tr> <td>Coin Maturation Time</td><td>12 Hours</td></tr>
-<tr> <td>Max Coin Age</td><td>60 Days</td></tr>
+<tr> <td>Max Coin Age</td><td>30 Days</td></tr>
 <tr> <td>Lightning Network</td><td>Yes</td></tr>
 <tr> <td>Atomic Swap</td><td>Yes (Barterdex)</td></tr>
 <tr> <td>ICO</td><td>None</td></tr>
