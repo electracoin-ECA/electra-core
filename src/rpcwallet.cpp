@@ -2248,7 +2248,7 @@ UniValue setstakesplitthreshold(const UniValue& params, bool fHelp)
             HelpRequiringPassphrase() + "\n"
 
             "\nArguments:\n"
-            "1. value   (numeric, required) Threshold value between 1 and 999999\n"
+            "1. value   (numeric, required) Threshold value between 1 and 9999999\n"
 
             "\nResult:\n"
             "{\n"
@@ -2263,8 +2263,8 @@ UniValue setstakesplitthreshold(const UniValue& params, bool fHelp)
 
     uint64_t nStakeSplitThreshold = params[0].get_int();
 
-    if (nStakeSplitThreshold > 999999)
-        throw runtime_error("Value out of range, max allowed is 999999");
+    if (nStakeSplitThreshold > 9999999)
+        throw runtime_error("Value out of range, max allowed is 9999999");
 
     CWalletDB walletdb(pwalletMain->strWalletFile);
     LOCK(pwalletMain->cs_wallet);
