@@ -200,10 +200,9 @@ public:
         vSeeds.push_back(CDNSSeedData("4", "178.128.111.9"));
         vSeeds.push_back(CDNSSeedData("5", "159.89.168.255"));
         vSeeds.push_back(CDNSSeedData("6", "192.171.18.198"));
-        vSeeds.push_back(CDNSSeedData("7", "104.129.17.219"));
-        vSeeds.push_back(CDNSSeedData("8", "167.88.171.113"));
-        vSeeds.push_back(CDNSSeedData("9", "167.88.171.50"));
-        vSeeds.push_back(CDNSSeedData("10", "35.187.253.6"));
+        vSeeds.push_back(CDNSSeedData("7", "167.114.145.147"));
+        vSeeds.push_back(CDNSSeedData("8", "51.38.83.67"));
+        vSeeds.push_back(CDNSSeedData("9", "54.37.235.120"));
   
         //vSeeds.push_back(CDNSSeedData("1", "zentec.ddns.net"));
 
