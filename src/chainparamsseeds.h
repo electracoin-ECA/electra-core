@@ -23,7 +23,3 @@ static SeedSpec6 pnSeed6_test[] = {
 
 };
 #endif // BITCOIN_CHAINPARAMSSEEDS_H
-
-167.114.145.147
-51.38.83.67
-54.37.235.120
