@@ -203,7 +203,10 @@ public:
         vSeeds.push_back(CDNSSeedData("7", "167.114.145.147"));
         vSeeds.push_back(CDNSSeedData("8", "51.38.83.67"));
         vSeeds.push_back(CDNSSeedData("9", "54.37.235.120"));
-  
+        vSeeds.push_back(CDNSSeedData("7", "165.22.155.173"));
+        vSeeds.push_back(CDNSSeedData("8", "174.138.61.12"));
+        vSeeds.push_back(CDNSSeedData("9", "68.183.81.213"));
+
         //vSeeds.push_back(CDNSSeedData("1", "zentec.ddns.net"));
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 33);
