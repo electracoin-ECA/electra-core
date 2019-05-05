@@ -133,7 +133,7 @@ public:
         vAlertPubKey = ParseHex("025208d9c58b8edb90e7eed266d2aed4b5d1c81a6668083a296bf37798acbdc9ba");
         nDefaultPort = 5817;
         bnProofOfWorkLimit = ~uint256(0) >> 20;
-        nMaxReorganizationDepth = 100;
+        nMaxReorganizationDepth = 10000;
         nEnforceBlockUpgradeMajority = 8100; // 75%
         nRejectBlockOutdatedMajority = 10260; // 95%
         nToCheckBlockUpgradeMajority = 10800; // Approximate expected amount of blocks in 7 days (1440*7.5)
