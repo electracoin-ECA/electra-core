@@ -1881,7 +1881,8 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
 
     obfuScationPool.InitCollateralAddress();
 
-    threadGroup.create_thread(boost::bind(&ThreadCheckObfuScationPool));
+    // MASTERNODESDISABLED - Enable thread below to restore
+    // threadGroup.create_thread(boost::bind(&ThreadCheckObfuScationPool));
 
     // ********************************************************* Step 11: start node
 
