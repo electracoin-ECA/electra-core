@@ -1042,9 +1042,8 @@ bool GetCoinAge(const CTransaction& tx, const unsigned int nTxTime, int nBestHei
     else
         bnCoinDay = bnCentSecond / (24 * 60 * 60);
 
-    LogPrintf("coin age bnCoinDay=%s\n", bnCoinDay.ToString().c_str());
     nCoinAge = bnCoinDay.Get64();
-    //LogPrintf("nCoinAge=%"PRId64"\n", nCoinAge);
+    LogPrint("net", "coin age bnCoinDay=%s\n", bnCoinDay.ToString().c_str());
     return true;
 }
 
@@ -4724,7 +4723,7 @@ static bool AcceptBlock(CBlock& block, CValidationState& state, CBlockIndex** pp
 
     if (pindex->nStatus & BLOCK_HAVE_DATA) {
         // TODO: deal better with duplicate blocks.
-        LogPrintf("AcceptBlock() : already have block %d %s\n", pindex->nHeight, pindex->GetBlockHash().ToString());
+        LogPrint("net", "AcceptBlock() : already have block %d %s\n", pindex->nHeight, pindex->GetBlockHash().ToString());
         return true;
     }
 
@@ -5882,7 +5881,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
                 !pSporkDB->SporkExists(SPORK_16_ZEROCOIN_MAINTENANCE_MODE);
 
         if (fMissingSporks || !fRequestedSporksIDB){
-            LogPrintf("asking peer for sporks\n");
+            LogPrint("net", "asking peer for sporks\n");
             pfrom->PushMessage("getsporks");
             fRequestedSporksIDB = true;
         }
