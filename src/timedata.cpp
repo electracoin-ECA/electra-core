@@ -53,7 +53,7 @@ void AddTimeData(const CNetAddr& ip, int64_t nOffsetSample)
     // Add data
     static CMedianFilter<int64_t> vTimeOffsets(200, 0);
     vTimeOffsets.input(nOffsetSample);
-    LogPrintf("net","Added time data, samples %d, offset %+d (%+d minutes)\n", vTimeOffsets.size(), nOffsetSample, nOffsetSample / 60);
+    LogPrint("net","Added time data, samples %d, offset %+d (%+d minutes)\n", vTimeOffsets.size(), nOffsetSample, nOffsetSample / 60);
 
     // There is a known issue here (see issue #4521):
     //
@@ -101,7 +101,7 @@ void AddTimeData(const CNetAddr& ip, int64_t nOffsetSample)
         if (fDebug) {
             BOOST_FOREACH (int64_t n, vSorted)
                 LogPrint("net", "%+d  ", n);
-            LogPrintf("net", "|  ");
+            LogPrint("net", "|  ");
         }
         LogPrint("net", "nTimeOffset = %+d  (%+d minutes)\n", nTimeOffset, nTimeOffset / 60);
     }
