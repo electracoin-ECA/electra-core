@@ -1,7 +1,7 @@
 # Electra
 
 <p align="center">
-    <img src="https://media.discordapp.net/attachments/516295832904138762/542275592704491521/bitcoin.png"
+    <img src="https://cdn.discordapp.com/attachments/575318354529746946/575318376529002547/ic_launcher.png"
         height="130">
 </p>
 <p align="center">
