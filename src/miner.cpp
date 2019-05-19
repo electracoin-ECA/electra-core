@@ -539,6 +539,12 @@ bool ProcessBlockFound(CBlock* pblock, CWallet& wallet, CReserveKey& reservekey)
     LogPrintf("%s\n", pblock->ToString());
     LogPrintf("generated %s\n", FormatMoney(pblock->vtx[0].vout[0].nValue));
 
+    uint256 hashProofOfStake = 0;
+    unique_ptr<CStakeInput> stake;
+
+    if (!CheckProofOfStake(*pblock, hashProofOfStake, stake))
+        return error("%s: proof-of-stake checking failed", __func__);
+
     // Found a solution
     {
         LOCK(cs_main);

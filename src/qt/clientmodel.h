@@ -54,7 +54,6 @@ public:
     int getNumConnections(unsigned int flags = CONNECTIONS_ALL) const;
     QString getMasternodeCountString() const;
     int getNumBlocks() const;
-    int getNumBlocksAtStartup();
 
     quint64 getTotalBytesRecv() const;
     quint64 getTotalBytesSent() const;

@@ -1056,6 +1056,7 @@ void BitcoinGUI::setNumBlocks(int count)
 
     tooltip = tr("Processed %n blocks of transaction history.", "", count);
 
+    /* // MASTERNODESDISABLED - Restore conditional below to show MN sync status
     // Set icon state: spinning if catching up, tick otherwise
     //    if(secs < 25*60) // 90*60 for bitcoin but we are 4x times faster
     if (masternodeSync.IsBlockchainSynced()) {
@@ -1094,6 +1095,24 @@ void BitcoinGUI::setNumBlocks(int count)
         progressBarLabel->setText(strSyncStatus);
         tooltip = strSyncStatus + QString("<br>") + tooltip;
     } else {
+*/
+
+    // MASTERNODESDISABLED - Remove code from here to...
+    if(secs < 90*60)
+    {
+        tooltip = tr("Up to date") + QString(".<br>") + tooltip;
+        labelBlocksIcon->setPixmap(QIcon(":/icons/synced").pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
+
+#ifdef ENABLE_WALLET
+        if(walletFrame)
+            walletFrame->showOutOfSyncWarning(false);
+#endif // ENABLE_WALLET
+
+        progressBarLabel->setVisible(false);
+        progressBar->setVisible(false);
+    }
+    else
+    {   //MASTERNODESDISABLED - ...to here.
         // Represent time from last generated block in human readable text
         QString timeBehindText;
         const int HOUR_IN_SECONDS = 60 * 60;
