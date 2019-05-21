@@ -1336,7 +1336,7 @@ void ListTransactions(const CWalletTx& wtx, const string& strAccount, int nMinDe
                     else
                         entry.push_back(Pair("category", "generate"));
                 } else {
-                    entry.push_back(Pair("category", pwalletMain->IsMine(wtx.vout[1]) ? "staked" : "receive"));
+                    entry.push_back(Pair("category", wtx.IsCoinStake() && pwalletMain->IsMine(wtx.vout[1]) ? "staked" : "receive"));
                 }
                 entry.push_back(Pair("amount", ValueFromAmount(r.amount)));
                 entry.push_back(Pair("vout", r.vout));
