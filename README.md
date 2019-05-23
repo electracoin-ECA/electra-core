@@ -44,7 +44,6 @@ Electra is a Blockchain using the highly-secure and power-efficient NIST5 algori
 ## Work in progress
 <table>
 <tr> <td>SegWit</td></tr>
-<tr> <td>BIP 130</td></tr>
 </table>
 
 ## Block Reward Schedule
