@@ -24,7 +24,7 @@ Electra is a Blockchain using the highly-secure and power-efficient NIST5 algori
 ## Technical Specifications
 <table>
 <tr> <td>Ticker</td><td>ECA</td></tr>
-<tr> <td>Algorithm</td><td>NIST5</td></tr>
+<tr> <td>Algorithm</td><td>NIST5/SHA-256</td></tr>
 <tr> <td>Consensus</td><td>Proof-of-Stake 3.0e</td></tr>
 <tr> <td>Maximum Supply</td><td>30,000,000,000* </td></tr>
 <tr> <td>Block Time</td><td>64 Seconds</td></tr>
