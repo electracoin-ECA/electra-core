@@ -48,11 +48,10 @@ Electra is a Blockchain using the highly-secure and power-efficient NIST5 algori
 
 ## Work done
 
-<table>
-<tr><td>[BIP130](https://github.com/Electra-project/electra-core/releases/tag/2.1.0)</td></tr>
-<tr><td>[BIP68](https://github.com/Electra-project/electra-core/releases/tag/2.1.0)</td></tr>
-</table>
+[BIP130](https://github.com/Electra-project/electra-core/releases/tag/2.1.0) 
 
+[BIP68](https://github.com/Electra-project/electra-core/releases/tag/2.1.0)
+    
 ## Block Reward Schedule
 
 | Percentage | Block              | Note                  |
