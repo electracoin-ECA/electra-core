@@ -7,6 +7,7 @@
 #ifndef BITCOIN_QT_CLIENTMODEL_H
 #define BITCOIN_QT_CLIENTMODEL_H
 
+#include "uint256.h"
 #include <QObject>
 #include <QDateTime>
 
@@ -61,6 +62,8 @@ public:
     double getVerificationProgress() const;
     QDateTime getLastBlockDate() const;
 
+    QString getLastBlockHash() const;
+
     //! Return true if core is doing initial block download
     bool inInitialBlockDownload() const;
     //! Return true if core is importing blocks
@@ -73,6 +76,7 @@ public:
     bool isReleaseVersion() const;
     QString clientName() const;
     QString formatClientStartupTime() const;
+    QString dataDir() const;
 
     bool getTorInfo(std::string& ip_port) const;
 
