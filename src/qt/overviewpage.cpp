@@ -44,6 +44,8 @@ public:
     {
         painter->save();
 
+	QString theme = GUIUtil::getThemeName();
+
         QIcon icon = qvariant_cast<QIcon>(index.data(Qt::DecorationRole));
         QRect mainRect = option.rect;
         mainRect.moveLeft(ICON_OFFSET);
@@ -89,13 +91,29 @@ public:
         }
 
         if(fConflicted) { // No need to check anything else for conflicted transactions
-            foreground = COLOR_CONFLICTED;
+            if (theme == "darktheme") {
+	       foreground = DARK_COLOR_CONFLICTED;
+	    } else {
+	       foreground = COLOR_CONFLICTED;
+	    }
         } else if (!confirmed || fImmature) {
-            foreground = COLOR_UNCONFIRMED;
+            if (theme == "darktheme") {
+	       foreground = DARK_COLOR_UNCONFIRMED;
+	    } else {
+	       foreground = COLOR_UNCONFIRMED;
+            }
         } else if (amount < 0) {
-            foreground = COLOR_NEGATIVE;
+            if (theme == "darktheme") {
+	       foreground = DARK_COLOR_NEGATIVE;
+	    } else {
+	       foreground = COLOR_NEGATIVE;
+	    }
         } else {
-            foreground = COLOR_BLACK;
+            if (theme == "darktheme") {
+	       foreground = DARK_COLOR_BLACK;
+	    } else {
+	       foreground = COLOR_BLACK;
+	    }
         }
         painter->setPen(foreground);
         QString amountText = BitcoinUnits::formatWithUnit(unit, amount, true, BitcoinUnits::separatorAlways);
@@ -103,8 +121,12 @@ public:
             amountText = QString("[") + amountText + QString("]");
         }
         painter->drawText(amountRect, Qt::AlignRight | Qt::AlignVCenter, amountText);
-
-        painter->setPen(COLOR_BLACK);
+	
+	if (theme == "darktheme") {
+               painter->setPen(DARK_COLOR_BLACK);
+	    } else {
+	       painter->setPen(COLOR_BLACK);
+	    }
         painter->drawText(amountRect, Qt::AlignLeft | Qt::AlignVCenter, GUIUtil::dateTimeStr(date));
 
         painter->restore();

@@ -893,7 +893,7 @@ void BitcoinGUI::exchangesActionClicked()
 }
 void BitcoinGUI::electraBlockExplorerActionClicked()
 {
-        QDesktopServices::openUrl(QUrl("https://explorer.electraproject.org/"));
+        QDesktopServices::openUrl(QUrl("https://www.electraexplorer.info/"));
 }
 void BitcoinGUI::cmcActionClicked()
 {

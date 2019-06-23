@@ -36,6 +36,22 @@ static const bool DEFAULT_SPLASHSCREEN = true;
 /* Transaction list -- TX status decoration - conflicted */
 #define COLOR_CONFLICTED QColor(255, 0, 0)
 
+/* Transaction list -- Dark Theme -- unconfirmed transaction */
+#define DARK_COLOR_UNCONFIRMED QColor(255, 255, 255)
+/* Transaction list -- Dark Theme -- negative amount */
+#define DARK_COLOR_NEGATIVE QColor(255, 255, 255)
+/* Transaction list -- Dark Theme -- bare address (without label) */
+#define DARK_COLOR_BAREADDRESS QColor(255, 255, 255)
+/* Transaction list -- Dark Theme -- TX status decoration - open until date */
+#define DARK_COLOR_TX_STATUS_OPENUNTILDATE QColor(255, 255, 255)
+/* Transaction list -- Dark Theme -- TX status decoration - offline */
+#define DARK_COLOR_TX_STATUS_OFFLINE QColor(255, 255, 255)
+/* Transaction list -- Dark Theme -- TX status decoration - default color */
+#define DARK_COLOR_BLACK QColor(255, 255, 255)
+/* Transaction list -- Dark Theme -- TX status decoration - conflicted */
+#define DARK_COLOR_CONFLICTED QColor(255, 255, 255)
+
+
 /* Tooltips longer than this (in characters) are converted into rich text,
    so that they can be word-wrapped.
  */
