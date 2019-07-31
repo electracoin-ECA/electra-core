@@ -69,12 +69,18 @@ static Checkpoints::MapCheckpoints mapCheckpoints =
     (182750, uint256("1c84752e501b27cdf561e1e96d0c15dc15925462845a62ee508ae98bb089216d"))
     (182751, uint256("268f8621be92a8a09d7fa10e8ddf62e4a275230a8212c718dad1d9bc98669271"))
     (199000, uint256("dc78cfb171a2ca24e235df6ec716d5a052dc89705c5af0393fad359b12753390"))
-    (220500, uint256("d93ed4534386fadd560b979f4476abf150a4b7b5515ab8b8e2ef878af9022a09"));
+    (220500, uint256("d93ed4534386fadd560b979f4476abf150a4b7b5515ab8b8e2ef878af9022a09"))
+    (254000, uint256("c3b95aea0d4d0261390fae05c58fd0ed4f681caa1a33ed315f8faa68c0759e3d"))
+    (263000, uint256("c59dc045c8b10a4fab139d45599f29bf7d6078272320a8ddc2fda80e309ad4c6"))
+    (272000, uint256("18641a1a0b8280e556d89a9870833f71c56dfd0f2f009864c60dc0ebfc8aec0c"))
+    (281000, uint256("7149d72ff7d223018cc501f1a3ae91174c57289822e7a9f4f3bed3e9dfc948d1"))
+    (290000, uint256("3c994e5cce0127a9c8fd7b7f10f3c9381dc4027b1e0c24eff6b93d4ddc02eb45"))
+    (294200, uint256("f0e34559eb14905d0befa07392bc8c8577aa288d714cf0af6c0e899eee8d3eb3"));
 
 static const Checkpoints::CCheckpointData data = {
     &mapCheckpoints,
-    1553337207, // * UNIX timestamp of last checkpoint block
-    592055,     // * total number of transactions between genesis and last checkpoint
+    1558254543, // * UNIX timestamp of last checkpoint block
+    744534,     // * total number of transactions between genesis and last checkpoint
                 //   (the tx=... number in the SetBestChain debug.log lines)
     4000        // * estimated number of transactions per day after checkpoint
 };
@@ -132,7 +138,7 @@ public:
         vAlertPubKey = ParseHex("025208d9c58b8edb90e7eed266d2aed4b5d1c81a6668083a296bf37798acbdc9ba");
         nDefaultPort = 5817;
         bnProofOfWorkLimit = ~uint256(0) >> 20;
-        nMaxReorganizationDepth = 100;
+        nMaxReorganizationDepth = 10000;
         nEnforceBlockUpgradeMajority = 8100; // 75%
         nRejectBlockOutdatedMajority = 10260; // 95%
         nToCheckBlockUpgradeMajority = 10800; // Approximate expected amount of blocks in 7 days (1440*7.5)
@@ -199,10 +205,13 @@ public:
         vSeeds.push_back(CDNSSeedData("4", "178.128.111.9"));
         vSeeds.push_back(CDNSSeedData("5", "159.89.168.255"));
         vSeeds.push_back(CDNSSeedData("6", "192.171.18.198"));
-        vSeeds.push_back(CDNSSeedData("7", "104.129.17.219"));
-        vSeeds.push_back(CDNSSeedData("8", "167.88.171.113"));
-        vSeeds.push_back(CDNSSeedData("9", "167.88.171.50"));
-  
+        vSeeds.push_back(CDNSSeedData("7", "167.114.145.147"));
+        vSeeds.push_back(CDNSSeedData("8", "51.38.83.67"));
+        vSeeds.push_back(CDNSSeedData("9", "54.37.235.120"));
+        vSeeds.push_back(CDNSSeedData("10", "165.22.155.173"));
+        vSeeds.push_back(CDNSSeedData("11", "174.138.61.12"));
+        vSeeds.push_back(CDNSSeedData("12", "68.183.81.213"));
+
         //vSeeds.push_back(CDNSSeedData("1", "zentec.ddns.net"));
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 33);
@@ -221,7 +230,6 @@ public:
         fMineBlocksOnDemand = false;
         fSkipProofOfWorkCheck = false;
         fTestnetToBeDeprecatedFieldRPC = false;
-        fHeadersFirstSyncingActive = true;
 
         nPoolMaxTransactions = 3;
         strSporkKey = "025208d9c58b8edb90e7eed266d2aed4b5d1c81a6668083a296bf37798acbdc9ba";

@@ -563,7 +563,7 @@ Decrypts and then imports password protected private key.
 
 #### bip38encrypt "electraaddress" "passphrase"
 
-Encrypts a private key corresponding to 'pivxaddress'.
+Encrypts a private key corresponding to 'electraaddress'.
 
 #### dumpprivkey “electraaddress”
 
