@@ -291,7 +291,8 @@ class CScriptVisitor : public boost::static_visitor<bool>
 private:
     CScript *script;
 public:
-    CScriptVisitor(CScript *scriptin) { script = scriptin; }
+    explicit CScriptVisitor(CScript *scriptin) { script = scriptin; }
+    CScriptVisitor(CScript *scriptin, bool shouldStealthIn) { script = scriptin; }
 
     bool operator()(const CNoDestination &dest) const {
         script->clear();
@@ -302,6 +303,35 @@ public:
         script->clear();
         *script << OP_DUP << OP_HASH160 << ToByteVector(keyID) << OP_EQUALVERIFY << OP_CHECKSIG;
         return true;
+    }
+
+    bool operator()(const CStealthAddress &stealthID) const {
+        script->clear();
+
+        ec_secret ephem_secret;
+        ec_secret secretShared;
+        ec_point pkSendTo;
+        ec_point ephem_pubkey;
+
+        if (GenerateRandomSecret(ephem_secret) != 0) {
+            return false;
+        }
+
+        if (StealthSecret(ephem_secret, stealthID.scan_pubkey, stealthID.spend_pubkey, secretShared, pkSendTo) != 0) {
+            return false;
+        }
+
+        CPubKey cpkTo(pkSendTo);
+        if (!cpkTo.IsValid()) {
+            return false;
+        }
+
+        if (SecretToPublicKey(ephem_secret, ephem_pubkey) != 0) {
+            return false;
+        }
+
+        *script << OP_RETURN << std::vector<unsigned char>(ephem_pubkey);
+        return false;
     }
 
     bool operator()(const CScriptID &scriptID) const {

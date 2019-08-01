@@ -114,6 +114,30 @@ bool CWalletDB::WriteMasterKey(unsigned int nID, const CMasterKey& kMasterKey)
     return Write(std::make_pair(std::string("mkey"), nID), kMasterKey, true);
 }
 
+bool CWalletDB::WriteStealthKeyMeta(const CKeyID& keyId, const CStealthKeyMetadata& sxKeyMeta)
+{
+    nWalletDBUpdated++;
+    return Write(std::make_pair(std::string("sxKeyMeta"), keyId), sxKeyMeta, true);
+}
+
+bool CWalletDB::EraseStealthKeyMeta(const CKeyID& keyId)
+{
+    nWalletDBUpdated++;
+    return Erase(std::make_pair(std::string("sxKeyMeta"), keyId));
+}
+
+bool CWalletDB::WriteStealthAddress(const CStealthAddress& sxAddr)
+{
+    nWalletDBUpdated++;
+    return Write(std::make_pair(std::string("sxAddr"), sxAddr.scan_pubkey), sxAddr, true);
+}
+
+bool CWalletDB::ReadStealthAddress(CStealthAddress& sxAddr)
+{
+    // -- set scan_pubkey before reading
+    return Read(std::make_pair(std::string("sxAddr"), sxAddr.scan_pubkey), sxAddr);
+}
+
 bool CWalletDB::WriteCScript(const uint160& hash, const CScript& redeemScript)
 {
     nWalletDBUpdated++;
@@ -464,6 +488,11 @@ bool ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue, CW
                 wss.fAnyUnordered = true;
 
             pwallet->AddToWallet(wtx, true);
+        } else if (strType == "sxAddr") {
+            CStealthAddress sxAddr;
+            ssValue >> sxAddr;
+            LogPrintf("Wallet ReadKeyValue sxAddr: %s\n", sxAddr.Encoded().c_str());
+            pwallet->stealthAddresses.insert(sxAddr);
         } else if (strType == "acentry") {
             string strAccount;
             ssKey >> strAccount;
@@ -592,6 +621,15 @@ bool ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue, CW
             if (!pwallet->nTimeFirstKey ||
                 (keyMeta.nCreateTime < pwallet->nTimeFirstKey))
                 pwallet->nTimeFirstKey = keyMeta.nCreateTime;
+        } else if (strType == "sxKeyMeta") {
+            LogPrintf("WalletDB ReadKeyValue sxKeyMeta\n");
+
+            CKeyID keyId;
+            ssKey >> keyId;
+            CStealthKeyMetadata sxKeyMeta;
+            ssValue >> sxKeyMeta;
+
+            pwallet->mapStealthKeyMeta[keyId] = sxKeyMeta;
         } else if (strType == "defaultkey") {
             ssValue >> pwallet->vchDefaultKey;
         } else if (strType == "pool") {
@@ -609,8 +647,8 @@ bool ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue, CW
                 pwallet->mapKeyMetadata[keyid] = CKeyMetadata(keypool.nTime);
         } else if (strType == "version") {
             ssValue >> wss.nFileVersion;
-            if (wss.nFileVersion == 10300)
-                wss.nFileVersion = 300;
+            // if (wss.nFileVersion == 10300)
+                // wss.nFileVersion = 300;
         } else if (strType == "cscript") {
             uint160 hash;
             ssKey >> hash;
@@ -1513,7 +1551,7 @@ std::list<CBigNum> CWalletDB::ListSpentCoinsSerial()
 {
     std::list<CBigNum> listPubCoin;
     std::list<CZerocoinSpend> listCoins = ListSpentCoins();
-    
+
     for ( auto& coin : listCoins) {
         listPubCoin.push_back(coin.GetSerial());
     }
