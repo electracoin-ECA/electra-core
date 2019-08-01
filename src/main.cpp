@@ -3021,10 +3021,6 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
         if (stake->IsZECA() && !ContextualCheckZerocoinStake(pindex->nHeight - 1, stake.get()))
             return state.DoS(100, error("%s: staked zECA fails context checks", __func__));
 
-        uint256 hash = block.GetHash();
-        if(!mapProofOfStake.count(hash)) // add to mapProofOfStake
-            mapProofOfStake.insert(make_pair(hash, hashProofOfStake));
-
         LOCK(cs_main);
 
         auto pindexPrev = pindex->pprev;

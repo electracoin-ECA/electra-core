@@ -4518,6 +4518,7 @@ public:
             Process(script);
     }
 
+    void operator()(const CStealthAddress &sxAddr) {}
     void operator()(const CNoDestination& none) {}
 };
 
