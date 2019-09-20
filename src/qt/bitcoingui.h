@@ -137,11 +137,11 @@ private:
     QAction* telegramAction;
     QAction* youtubeAction;
     QAction* redditAction;
-    QAction* electraNewsAction;
-    QAction* foundationNewsAction;
     QAction* exchangesAction;
     QAction* electraBlockExplorerAction;
     QAction* cmcAction;
+    QAction* githubAction;
+    QAction* webmainAction;
 
     QSystemTrayIcon* trayIcon;
     QMenu* trayIconMenu;
@@ -208,17 +208,17 @@ public slots:
     bool handlePaymentRequest(const SendCoinsRecipient& recipient);
 
   /** Links menu */
+    void webmainActionClicked();
     void facebookActionClicked();
     void twitterActionClicked();
     void discordActionClicked();
     void telegramActionClicked();
     void youtubeActionClicked();
     void redditActionClicked();
-    void electraNewsActionClicked();
-    void foundationNewsActionClicked();
     void exchangesActionClicked();
     void electraBlockExplorerActionClicked();
-	 void cmcActionClicked();
+    void cmcActionClicked();
+    void githubActionClicked();
     
     /** Show incoming transaction notification for new transactions. */
     void incomingTransaction(const QString& date, int unit, const CAmount& amount, const QString& type, const QString& address);

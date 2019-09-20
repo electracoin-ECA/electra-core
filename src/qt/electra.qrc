@@ -66,6 +66,7 @@
 	<file alias="youtube">res/icons/youtube.png</file>
 	<file alias="twitter">res/icons/twitter.png</file>
 	<file alias="cmc">res/icons/cmc.png</file>
+        <file alias="github">res/icons/github.png</file>
 	
     </qresource>
     <qresource prefix="/css">
