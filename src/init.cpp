@@ -1649,16 +1649,17 @@ bool AppInit2()
             RandAddSeedPerfmon();
 
             CPubKey newDefaultKey;
-            if (pwalletMain->GetKeyFromPool(newDefaultKey)) {
-                pwalletMain->SetDefaultKey(newDefaultKey);
-                if (!pwalletMain->SetAddressBook(pwalletMain->vchDefaultKey.GetID(), "", "receive"))
-                    strErrors << _("Cannot write default address") << "\n";
+            // Top up the keypool
+            if (!pwalletMain->TopUpKeyPool()) {
+                // Error generating keys
+                InitError(_("Unable to generate initial key") += "\n");
+                return error("%s %s", __func__ , "Unable to generate initial key");
             }
 
             pwalletMain->SetBestChain(chainActive.GetLocator());
         }
 
-        LogPrintf("%s", strErrors.str());
+        LogPrintf("Init errors: %s\n", strErrors.str());
         LogPrintf("Wallet completed loading in %15dms\n", GetTimeMillis() - nWalletStartTime);
         zwalletMain = new CzECAWallet(pwalletMain->strWalletFile);
         pwalletMain->setZWallet(zwalletMain);
