@@ -209,7 +209,7 @@ public:
         vSeeds.push_back(CDNSSeedData("8", "51.38.83.67"));
         vSeeds.push_back(CDNSSeedData("9", "54.37.235.120"));
         vSeeds.push_back(CDNSSeedData("10", "165.22.155.173"));
-        vSeeds.push_back(CDNSSeedData("11", "174.138.61.12"));
+        vSeeds.push_back(CDNSSeedData("11", "167.114.67.75"));
         vSeeds.push_back(CDNSSeedData("12", "68.183.81.213"));
 
         //vSeeds.push_back(CDNSSeedData("1", "zentec.ddns.net"));

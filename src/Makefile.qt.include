@@ -267,6 +267,7 @@ RES_ICONS = \
   qt/res/icons/bittrex.png \
   qt/res/icons/discord.png \
   qt/res/icons/facebook.png \
+  qt/res/icons/github.png \
   qt/res/icons/reddit.png \
   qt/res/icons/telegram.png \
   qt/res/icons/twitter.png \
