@@ -57,8 +57,8 @@ Electra is a Blockchain using the highly-secure and power-efficient NIST5 algori
 | Percentage | Block              | Note                  |
 |------------|--------------------|-----------------------|
 | 50%        | 11811   - 112200   | Year 1                |
-| 2.5%       | 112201  - 604950   | Year 2 (Current Rate) |
-| 1.25%      | 604951  - 1097700  | Year 3                |
+| 2.5%       | 112201  - 604950   | Year 2                |
+| 1.25%      | 604951  - 1097700  | Year 3 (Current Rate) |
 | 0.63%      | 1097701 - 1590450  | Year 4                |
 | 0.31%      | 1590451 - 2083200  | Year 5                |
 | 0.16%      | 2083201 - 2575950  | Year 6                |
