@@ -238,6 +238,13 @@ bool CCryptoKeyStore::Unlock(const CKeyingMaterial& vMasterKeyIn)
         for (; mi != mapCryptedKeys.end(); ++mi) {
             const CPubKey& vchPubKey = (*mi).second.first;
             const std::vector<unsigned char>& vchCryptedSecret = (*mi).second.second;
+
+            if (vchCryptedSecret.size() < 1) // key was recieved from stealth/anon txn with wallet locked, will be expanded after this
+            {
+                LogPrintf("Skipping unexpanded key %s.\n", vchPubKey.GetHash().ToString().c_str());
+                continue;
+            }
+
             CKeyingMaterial vchSecret;
             if (!DecryptSecret(vMasterKeyIn, vchCryptedSecret, vchPubKey.GetHash(), vchSecret)) {
                 keyFail = true;

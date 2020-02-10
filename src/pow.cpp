@@ -192,7 +192,7 @@ bool CheckProofOfWork(uint256 hash, unsigned int nBits)
         return error("CheckProofOfWork() : nBits below minimum work");
 
     // Check proof of work matches claimed amount
-    if (hash > bnTarget)
+    if (hash.GetCompact() > bnTarget)
         return error("CheckProofOfWork() : hash doesn't match nBits");
 
     return true;

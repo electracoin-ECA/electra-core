@@ -231,6 +231,7 @@ public:
 
     bool operator()(const CKeyID& id) const { return addr->Set(id); }
     bool operator()(const CScriptID& id) const { return addr->Set(id); }
+    bool operator()(const CStealthAddress &sxAddr) const { return false; }
     bool operator()(const CNoDestination& no) const { return false; }
 };
 
@@ -261,8 +262,8 @@ bool CBitcoinAddress::IsValid() const
 bool CBitcoinAddress::IsValid(const CChainParams& params) const
 {
     bool fCorrectSize = vchData.size() == 20;
-    bool fKnownVersion = vchVersion == params.Base58Prefix(CChainParams::PUBKEY_ADDRESS) ||
-                         vchVersion == params.Base58Prefix(CChainParams::SCRIPT_ADDRESS);
+    bool fKnownVersion = vchVersion == Params().Base58Prefix(CChainParams::PUBKEY_ADDRESS) ||
+                         vchVersion == Params().Base58Prefix(CChainParams::SCRIPT_ADDRESS);
     return fCorrectSize && fKnownVersion;
 }
 

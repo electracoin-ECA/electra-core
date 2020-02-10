@@ -84,8 +84,6 @@ static const unsigned int MAX_BLOCKFILE_SIZE = 0x8000000; // 128 MiB
 static const unsigned int BLOCKFILE_CHUNK_SIZE = 0x1000000; // 16 MiB
 /** The pre-allocation chunk size for rev?????.dat files (since 0.8) */
 static const unsigned int UNDOFILE_CHUNK_SIZE = 0x100000; // 1 MiB
-/** Coinbase transaction outputs can only be spent after this number of new blocks (network rule) */
-static const int COINBASE_MATURITY = 10;
 /** Maximum number of script-checking threads allowed */
 static const int MAX_SCRIPTCHECK_THREADS = 16;
 /** -par default (number of script-checking threads, 0 = auto) */
@@ -110,7 +108,7 @@ static const unsigned int MAX_REJECT_MESSAGE_LENGTH = 111;
 /** Default for -headerspamfilter, use header spam filter */
 static const bool DEFAULT_HEADER_SPAM_FILTER = true;
 /** Default for -headerspamfiltermaxsize, maximum size of the list of indexes in the header spam filter */
-static const unsigned int DEFAULT_HEADER_SPAM_FILTER_MAX_SIZE = COINBASE_MATURITY;
+static const unsigned int DEFAULT_HEADER_SPAM_FILTER_MAX_SIZE = 50;
 /** Default for -headerspamfiltermaxavg, maximum average size of an index occurrence in the header spam filter */
 static const unsigned int DEFAULT_HEADER_SPAM_FILTER_MAX_AVG = 10;
 
@@ -171,7 +169,6 @@ extern int64_t nReserveBalance;
 
 extern std::map<uint256, int64_t> mapRejectedBlocks;
 extern std::map<unsigned int, unsigned int> mapHashedBlocks;
-extern std::set<std::pair<COutPoint, unsigned int> > setStakeSeen;
 extern std::map<uint256, int64_t> mapZerocoinspends; //txid, time received
 
 /** Best header we've seen so far (used for getheaders queries' starting points). */
