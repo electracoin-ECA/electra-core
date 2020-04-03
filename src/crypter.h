@@ -19,13 +19,13 @@ const unsigned int WALLET_CRYPTO_SALT_SIZE = 8;
 /**
  * Private key encryption is done based on a CMasterKey,
  * which holds a salt and random encryption key.
- *
+ * 
  * CMasterKeys are encrypted using AES-256-CBC using a key
  * derived using derivation method nDerivationMethod
  * (0 == EVP_sha512()) and derivation iterations nDeriveIterations.
  * vchOtherDerivationParameters is provided for alternative algorithms
  * which may require more parameters (such as scrypt).
- *
+ * 
  * Wallet Private Keys are then encrypted using AES-256-CBC
  * with the double-sha256 of the public key as the IV, and the
  * master key's key as the encryption key (see keystore.[ch]).
@@ -142,6 +142,10 @@ bool DecryptAES256(const SecureString& sKey, const std::string& sCiphertext, con
 class CCryptoKeyStore : public CBasicKeyStore
 {
 private:
+    CryptedKeyMap mapCryptedKeys;
+
+    CKeyingMaterial vMasterKey;
+
     //! if fUseCrypto is true, mapKeys must be empty
     //! if fUseCrypto is false, vMasterKey must be empty
     bool fUseCrypto;
@@ -150,9 +154,6 @@ private:
     bool fDecryptionThoroughlyChecked;
 
 protected:
-    CryptedKeyMap mapCryptedKeys;
-    CKeyingMaterial vMasterKey;
-
     bool SetCrypted();
 
     //! will encrypt previously unencrypted keys
