@@ -16,9 +16,7 @@
 
 uint256 CBlockHeader::GetHash() const
 {
-    if (nVersion > 9)
-        return Hash(BEGIN(nVersion), END(nAccumulatorCheckpoint));
-    else if (nVersion > 6)
+    if (nVersion > 6)
         return Hash(BEGIN(nVersion), END(nNonce));
     else
         return HashNist5(BEGIN(nVersion), END(nNonce));

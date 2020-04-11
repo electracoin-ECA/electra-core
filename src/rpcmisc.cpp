@@ -308,23 +308,23 @@ UniValue spork(const UniValue& params, bool fHelp)
 
         "\nArguments:\n"
         "1. \"name\"        (string, required)  \"show\" to show values, \"active\" to show active state.\n"
-        "                       When set up as a spork signer, the name of the spork can be used to update it's value.\n"
+        "                       When set up as a spork signer, the name of the spork can be used to update its value.\n"
         "2. value           (numeric, required when updating a spork) The new value for the spork.\n"
 
         "\nResult (show):\n"
         "{\n"
-        "  \"spork_name\": nnn      (key/value) Key is the spork name, value is it's current value.\n"
+        "  \"spork_name\": num      (key/value) Key is the spork name, value is its current value.\n"
         "  ,...\n"
         "}\n"
 
         "\nResult (active):\n"
         "{\n"
-        "  \"spork_name\": true|false      (key/value) Key is the spork name, value is a boolean for it's active state.\n"
+        "  \"spork_name\": true|false      (key/value) Key is the spork name, value is a boolean for its active state.\n"
         "  ,...\n"
         "}\n"
 
         "\nResult (name):\n"
-        " \"success|failure\"       (string) Wither or not the update succeeded.\n"
+        " \"success|failure\"       (string) Whether or not the update succeeded.\n"
 
         "\nExamples:\n" +
         HelpExampleCli("spork", "show") + HelpExampleRpc("spork", "show"));

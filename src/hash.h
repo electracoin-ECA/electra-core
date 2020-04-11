@@ -10,6 +10,7 @@
 #define ELECTRA_HASH_H
 
 #include "crypto/ripemd160.h"
+#include "crypto/scrypt.h"
 #include "crypto/sha256.h"
 #include "serialize.h"
 #include "uint256.h"
@@ -311,6 +312,33 @@ unsigned int MurmurHash3(unsigned int nHashSeed, const std::vector<unsigned char
 
 void BIP32Hash(const ChainCode chainCode, unsigned int nChild, unsigned char header, const unsigned char data[32], unsigned char output[64]);
 
+inline uint256 scrypt_hash(const void* input, size_t inputlen, const unsigned int N=1024)
+{
+    uint256 result;
+    scrypt((const char*)input, inputlen, (const char*)input, inputlen, (char*)&result, N, 1, 1, 32);
+    return result;
+}
+
+inline uint256 scrypt_salted_hash(const void* input, size_t inputlen, const void* salt, size_t saltlen)
+{
+    uint256 result;
+    scrypt((const char*)input, inputlen, (const char*)salt, saltlen, (char*)&result, 1024, 1, 1, 32);
+    return result;
+}
+
+inline uint256 scrypt_salted_multiround_hash(const void* input, size_t inputlen, const void* salt, size_t saltlen, const unsigned int nRounds)
+{
+    uint256 resultHash = scrypt_salted_hash(input, inputlen, salt, saltlen);
+    uint256 transitionalHash = resultHash;
+
+    for (unsigned int i = 1; i < nRounds; i++) {
+        resultHash = scrypt_salted_hash(input, inputlen, (const void*)&transitionalHash, 32);
+        transitionalHash = resultHash;
+    }
+
+    return resultHash;
+}
+
 //int HMAC_SHA512_Init(HMAC_SHA512_CTX *pctx, const void *pkey, size_t len);
 //int HMAC_SHA512_Update(HMAC_SHA512_CTX *pctx, const void *pdata, size_t len);
 //int HMAC_SHA512_Final(unsigned char *pmd, HMAC_SHA512_CTX *pctx);
@@ -357,6 +385,9 @@ inline uint256 HashNist5(const T1 pbegin, const T1 pend)
     return hash[4].trim256();
 }
 
-void scrypt_hash(const char* pass, unsigned int pLen, const char* salt, unsigned int sLen, char* output, unsigned int N, unsigned int r, unsigned int p, unsigned int dkLen);
+inline void scrypt_hash(const char* pass, unsigned int pLen, const char* salt, unsigned int sLen, char* output, unsigned int N, unsigned int r, unsigned int p, unsigned int dkLen)
+{
+    scrypt(pass, pLen, salt, sLen, output, N, r, p, dkLen);
+}
 
 #endif // ELECTRA_HASH_H

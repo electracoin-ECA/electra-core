@@ -161,7 +161,7 @@ public:
     // proof-of-stake specific fields
     uint256 GetBlockTrust() const;
     uint64_t nStakeModifier;             // hash modifier for proof-of-stake
-    unsigned int nStakeModifierChecksum; // checksum of index; in-memeory only
+    unsigned int nStakeModifierChecksum; // checksum of index; in-memory only
     COutPoint prevoutStake;
     unsigned int nStakeTime;
     uint256 hashProofOfStake;
@@ -233,8 +233,8 @@ public:
         nTime = block.nTime;
         nBits = block.nBits;
         nNonce = block.nNonce;
-        if(block.nVersion > 9)
-            nAccumulatorCheckpoint = block.nAccumulatorCheckpoint;
+        //if(block.nVersion > 9)
+            nAccumulatorCheckpoint = 0;
 
         //Proof of Stake
         bnChainTrust = uint256();
@@ -498,11 +498,11 @@ public:
         READWRITE(nTime);
         READWRITE(nBits);
         READWRITE(nNonce);
-        if(this->nVersion > 9) {
+        /*if(this->nVersion > 9) {
             READWRITE(nAccumulatorCheckpoint);
             READWRITE(mapZerocoinSupply);
             READWRITE(vMintDenominationsInBlock);
-        }
+        }*/
 
     }
 

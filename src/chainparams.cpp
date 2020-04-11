@@ -84,7 +84,7 @@ static Checkpoints::MapCheckpoints mapCheckpoints =
     (550000, uint256("9f5e359a17727235b9b0fb9b5a59fa4e6a11a29e3f661bdeb66939b961c7be14"))
     (600000, uint256("6d0478d3bda0737760fb0e9c821c57527e142264dbf3739233e6d0fe304e5e1c"))
     (645000, uint256("53c4deeef20ed0af390dafbda677061990da797d688ab29e266defabdbd35a79"));
-	//700000:
+    //700000:
 
 static const Checkpoints::CCheckpointData data = {
     &mapCheckpoints,
@@ -147,7 +147,7 @@ public:
         vAlertPubKey = ParseHex("025208d9c58b8edb90e7eed266d2aed4b5d1c81a6668083a296bf37798acbdc9ba");
         nDefaultPort = 5817;
         bnProofOfWorkLimit = ~uint256(0) >> 20;
-        nMaxReorganizationDepth = 10000;
+        nMaxReorganizationDepth = 100;
         nEnforceBlockUpgradeMajority = 8100; // 75%
         nRejectBlockOutdatedMajority = 10260; // 95%
         nToCheckBlockUpgradeMajority = 10800; // Approximate expected amount of blocks in 7 days (1440*7.5)
@@ -207,7 +207,7 @@ public:
 
         assert(genesis.hashMerkleRoot == uint256("0xa45c61b17857983dee346573eb46cae28171b98a2595115fea8bc5a9227467dd"));
         assert(hashGenesisBlock == uint256("0x00000f98da995de0ef1665c7d3338687923c1199230a44ecbdb5cec9306e4f4e"));
-        
+
         vSeeds.push_back(CDNSSeedData("1", "seed01.electraproject.org"));
         vSeeds.push_back(CDNSSeedData("2", "seed02.electraproject.org"));
         vSeeds.push_back(CDNSSeedData("3", "seed03.electraproject.org"));
@@ -257,7 +257,7 @@ public:
         nRequiredAccumulation = 1;
         nDefaultSecurityLevel = 100; //full security level for accumulators
         nZerocoinHeaderVersion = 10; //Block headers must be this version once zerocoin is active
-        nZerocoinRequiredStakeDepth = 200; //The required confirmations for a zyce to be stakable
+        nZerocoinRequiredStakeDepth = 200; //The required confirmations for a zeca to be stakable
 
         nBudget_Fee_Confirmations = 6; // Number of confirmations for the finalization fee
     }
@@ -298,7 +298,7 @@ public:
         nMasternodeCountDrift = 4;
         nModifierUpdateBlock = -1; //approx Mon, 17 Apr 2017 04:00:00 GMT
         nMaxMoneyOut = 43199500 * COIN;
-        nZerocoinStartHeight = nPOSStartBlock;
+        nZerocoinStartHeight = 2100000000;
         //nZerocoinStartTime = 1501776000;
         nBlockEnforceSerialRange = -1; //Enforce serial range starting this block
         nBlockRecalculateAccumulators = nZerocoinStartHeight + 10; //Trigger a recalculation of accumulators

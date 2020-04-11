@@ -11,7 +11,7 @@
 #include "util.h"
 #include "init.h"
 #include "uint256.h"
-#include "scrypt.h"
+#include "hash.h"
 
 #include <boost/foreach.hpp>
 #include <openssl/aes.h>
@@ -268,7 +268,6 @@ bool CCryptoKeyStore::Unlock(const CKeyingMaterial& vMasterKeyIn)
 
         uint256 hashSeed;
         if (CWalletDB(pwalletMain->strWalletFile).ReadCurrentSeedHash(hashSeed)) {
-
             uint256 nSeed;
             if (!GetDeterministicSeed(hashSeed, nSeed)) {
                 return error("Failed to read zECA seed from DB. Wallet is probably corrupt.");
