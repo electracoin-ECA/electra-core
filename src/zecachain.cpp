@@ -49,7 +49,7 @@ bool BlockToPubcoinList(const CBlock& block, std::list<libzerocoin::PublicCoin>&
         if (fFilterInvalid) {
             bool fValid = true;
             for (const CTxIn in : tx.vin) {
-                if (!ValidOutPoint(in.prevout, INT_MAX)) {
+                if (!ValidOutPoint(in.prevout, INT_MAX, block.nTime)) {
                     fValid = false;
                     break;
                 }
@@ -61,7 +61,7 @@ bool BlockToPubcoinList(const CBlock& block, std::list<libzerocoin::PublicCoin>&
         uint256 txHash = tx.GetHash();
         for (unsigned int i = 0; i < tx.vout.size(); i++) {
             //Filter out mints that use invalid outpoints - edge case: invalid spend with minted change
-            if (fFilterInvalid && !ValidOutPoint(COutPoint(txHash, i), INT_MAX))
+            if (fFilterInvalid && !ValidOutPoint(COutPoint(txHash, i), INT_MAX, block.nTime))
                 break;
 
             const CTxOut txOut = tx.vout[i];
@@ -91,7 +91,7 @@ bool BlockToZerocoinMintList(const CBlock& block, std::list<CZerocoinMint>& vMin
         if (fFilterInvalid) {
             bool fValid = true;
             for (const CTxIn in : tx.vin) {
-                if (!ValidOutPoint(in.prevout, INT_MAX)) {
+                if (!ValidOutPoint(in.prevout, INT_MAX, block.nTime)) {
                     fValid = false;
                     break;
                 }
@@ -103,7 +103,7 @@ bool BlockToZerocoinMintList(const CBlock& block, std::list<CZerocoinMint>& vMin
         uint256 txHash = tx.GetHash();
         for (unsigned int i = 0; i < tx.vout.size(); i++) {
             //Filter out mints that use invalid outpoints - edge case: invalid spend with minted change
-            if (fFilterInvalid && !ValidOutPoint(COutPoint(txHash, i), INT_MAX))
+            if (fFilterInvalid && !ValidOutPoint(COutPoint(txHash, i), INT_MAX, block.nTime))
                 break;
 
             const CTxOut txOut = tx.vout[i];

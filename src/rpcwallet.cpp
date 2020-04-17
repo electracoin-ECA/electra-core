@@ -13,7 +13,6 @@
 #include "net.h"
 #include "netbase.h"
 #include "rpcserver.h"
-#include "stealth.h"
 #include "timedata.h"
 #include "util.h"
 #include "utilmoneystr.h"
@@ -126,42 +125,6 @@ UniValue getnewaddress(const UniValue& params, bool fHelp)
     return CBitcoinAddress(account.vchPubKey.GetID()).ToString();
 }
 
-UniValue getnewstealthaddress(const UniValue& params, bool fHelp)
-{
-    if (fHelp || params.size() > 1)
-        throw runtime_error(
-            "getnewstealthaddress ( \"label\" )\n"
-            "\nCreates a new stealth address\n"
-            + HelpRequiringPassphrase() +
-            "\nArguments:\n"
-            "1. \"label\"              (string, optional) Label for your stealth address\n"
-
-            "\nResult:\n"
-            "\"stealth address\"       (string) Your personal stealth address\n"
-
-            "\nExamples:\n" +
-            HelpExampleCli("getnewstealthaddress", "") + HelpExampleCli("getnewstealthaddress", "\"\"") +
-            HelpExampleCli("getnewstealthaddress", "\"My Stealth\"") + HelpExampleRpc("getnewstealthaddress", "\"My Stealth\""));
-
-    LOCK2(cs_main, pwalletMain->cs_wallet);
-
-    if (pwalletMain->IsLocked())
-        throw std::runtime_error("Failed: Wallet must be unlocked.");
-
-    std::string sLabel;
-    if (!params[0].isNull())
-        sLabel = params[0].get_str();
-
-    CStealthAddress sxAddr;
-    std::string sError;
-    if (!GenerateNewStealthAddress(sError, sLabel, sxAddr))
-        throw std::runtime_error(std::string("Couldn't get new stealth address: ") + sError);
-
-    if (!pwalletMain->AddStealthAddress(sxAddr))
-        throw std::runtime_error("Could not save to wallet.");
-
-    return sxAddr.Encoded();
-}
 
 CBitcoinAddress GetAccountAddress(string strAccount, bool bForceNew = false)
 {
@@ -225,6 +188,7 @@ UniValue getaccountaddress(const UniValue& params, bool fHelp)
     return ret;
 }
 
+
 UniValue getrawchangeaddress(const UniValue& params, bool fHelp)
 {
     if (fHelp || params.size() > 1)
@@ -255,6 +219,7 @@ UniValue getrawchangeaddress(const UniValue& params, bool fHelp)
 
     return CBitcoinAddress(keyID).ToString();
 }
+
 
 UniValue setaccount(const UniValue& params, bool fHelp)
 {
@@ -292,6 +257,7 @@ UniValue setaccount(const UniValue& params, bool fHelp)
     return NullUniValue;
 }
 
+
 UniValue getaccount(const UniValue& params, bool fHelp)
 {
     if (fHelp || params.size() != 1)
@@ -320,6 +286,7 @@ UniValue getaccount(const UniValue& params, bool fHelp)
         strAccount = (*mi).second.name;
     return strAccount;
 }
+
 
 UniValue getaddressesbyaccount(const UniValue& params, bool fHelp)
 {
@@ -414,10 +381,6 @@ UniValue sendtoaddress(const UniValue& params, bool fHelp)
 
     LOCK2(cs_main, pwalletMain->cs_wallet);
 
-    if (params[0].get_str().length() > 75
-        && IsStealthAddress(params[0].get_str()))
-        return sendtostealthaddress(params, false);
-
     CBitcoinAddress address(params[0].get_str());
     if (!address.IsValid())
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Electra address");
@@ -487,62 +450,55 @@ UniValue sendtoaddressix(const UniValue& params, bool fHelp)
     return wtx.GetHash().GetHex();
 }
 
-UniValue sendtostealthaddress(const UniValue& params, bool fHelp)
+UniValue burncoins(const UniValue& params, bool fHelp)
 {
-    if (fHelp || params.size() < 2 || params.size() > 5)
-        throw runtime_error(
-            "sendtostealthaddress \"stealth address\" amount ( \"comment\" \"comment-to\" \"narration\" )\n"
-            "\nSend an amount to a given address. The amount is a real and is rounded to the nearest 0.00000001\n" +
+    if (fHelp || params.size() < 1 || params.size() > 2)
+        throw std::runtime_error(
+            "burncoins amount ( \"comment\" )\n"
+            "\nBurn an amount of coins. The amount is a real and is rounded to the nearest 0.00000001\n" +
             HelpRequiringPassphrase() + "\n"
 
             "\nArguments:\n"
-            "1. \"stealth address\"  (string, required) The stealth address to send to.\n"
-            "2. \"amount\"      (numeric, required) The amount in ECA to send. eg 0.1\n"
-            "3. \"comment\"     (string, optional) A comment used to store what the transaction is for. \n"
-            "                             This is not part of the transaction, just kept in your wallet.\n"
-            "4. \"comment-to\"  (string, optional) A comment to store the name of the person or organization \n"
-            "                             to which you're sending the transaction. This is not part of the \n"
-            "                             transaction, just kept in your wallet.\n"
-            "5. \"narration\"   (string, optional) A comment used to store what the transaction is for. \n"
-            "                             This is not part of the transaction, just kept in your wallet.\n"
+            "1. \"amount\"      (numeric, required) The amount in ECA to burn. eg 0.1\n"
+            "2. \"comment\"     (string, optional) A comment embedded in the transaction on the blockchain.\n"
 
             "\nResult:\n"
             "\"transactionid\"  (string) The transaction id.\n"
 
             "\nExamples:\n" +
-            HelpExampleCli("sendtostealthaddress", "\"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" 0.1") +
-            HelpExampleCli("sendtostealthaddress", "\"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" 0.1 \"donation\" \"seans outpost\"") +
-            HelpExampleRpc("sendtostealthaddress", "\"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\", 0.1, \"donation\", \"seans outpost\""));
-
-    // pwallet->BlockUntilSyncedToCurrentChain();
+            HelpExampleCli("burncoins", "0.1") +
+            HelpExampleCli("burncoins", "0.1 \"hello world\"") +
+            HelpExampleRpc("burncoins", "0.1, \"hello world\""));
 
     LOCK2(cs_main, pwalletMain->cs_wallet);
 
-    CStealthAddress sxAddr;
-    if (!sxAddr.SetEncoded(params[0].get_str()))
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Electra stealth address.");
-
     // Amount
-    CAmount nAmount = AmountFromValue(params[1]);
+    CAmount nAmount = AmountFromValue(params[0]);
+    if (nAmount > pwalletMain->GetBalance())
+        throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "Insufficient funds");
 
-    // Wallet comments
+    // Comment
     CWalletTx wtx;
-    if (params.size() > 2 && !params[2].isNull() && !params[2].get_str().empty())
-        wtx.mapValue["comment"] = params[2].get_str();
-    if (params.size() > 3 && !params[3].isNull() && !params[3].get_str().empty())
-        wtx.mapValue["to"] = params[3].get_str();
-
-    std::string sNarr = "";
-    if (!params[4].isNull())
-        sNarr = params[4].get_str();
-    if (sNarr.length() > 24)
-        throw JSONRPCError(RPC_INVALID_PARAMETER, "Narration must be smaller than 24 characters");
+    CScript burnScript = CScript() << OP_RETURN;
+    if (params.size() > 1 && !params[1].isNull() && !params[1].get_str().empty()) {
+        if (params[1].get_str().length() > MAX_OP_RETURN_RELAY - 3)
+            throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("Comment cannot be longer than %u characters", MAX_OP_RETURN_RELAY - 3));
+        burnScript << ToByteVector(params[1].get_str());
+    }
 
     EnsureWalletIsUnlocked();
+    CReserveKey reservekey(pwalletMain);
+    int64_t nFeeRequired;
+    std::string strError;
 
-    std::string sError;
-    if (!pwalletMain->SendStealthMoneyToDestination(sxAddr, nAmount, sNarr, wtx, sError))
-        throw JSONRPCError(RPC_WALLET_ERROR, sError);
+    if (!pwalletMain->CreateTransaction(burnScript, nAmount, wtx, reservekey, nFeeRequired, strError)) {
+        if (nAmount + nFeeRequired > pwalletMain->GetBalance())
+            strError = strprintf("Error: This transaction requires a transaction fee of at least %s because of its amount, complexity, or use of recently received funds!", FormatMoney(nFeeRequired));
+        LogPrintf("BurnCoins() : %s\n", strError);
+        throw JSONRPCError(RPC_WALLET_ERROR, strError);
+    }
+    if (!pwalletMain->CommitTransaction(wtx, reservekey))
+        throw JSONRPCError(RPC_WALLET_ERROR, "Error: The transaction was rejected! This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.");
 
     return wtx.GetHash().GetHex();
 }
@@ -1373,182 +1329,6 @@ UniValue listreceivedbyaccount(const UniValue& params, bool fHelp)
     LOCK2(cs_main, pwalletMain->cs_wallet);
 
     return ListReceived(params, true);
-}
-
-UniValue liststealthaddresses(const UniValue& params, bool fHelp)
-{
-    if (fHelp || params.size() > 1)
-        throw runtime_error(
-            "liststealthaddresses [ show_secrets ]\n"
-            "\nList owned stealth addresses." +
-            HelpRequiringPassphrase() + "\n"
-
-            "\nArguments\n"
-            "1. show_secrets     (bool, optional, default=false) Whether to show secret keys\n"
-
-            "\nResult:\n"
-            "[\n"
-            "  {\n"
-            "    \"address\" : \"stealthaddress\",    (string) The stealth address\n"
-            "    \"label\" : \"labelname\",           (string) The label of the receiving address. The default label is \"\".\n"
-            "    \"scan_secret\" : \"scankey\",        (string) Only returned if secrets are shown\n"
-            "    \"spend_secret\" : \"spendkey\",      (string) Only returned if secrets are shown\n"
-            "  }\n"
-            "  ,...\n"
-            "]\n"
-
-            "\nExamples:\n" +
-            HelpExampleCli("liststealthaddresses", "") + HelpExampleRpc("liststealthaddresses", ""));
-
-    LOCK2(cs_main, pwalletMain->cs_wallet);
-
-    bool fShowSecrets = false;
-    if (params.size() > 0)
-        fShowSecrets = params[0].get_bool();
-
-    if (fShowSecrets && pwalletMain->IsLocked())
-        throw runtime_error("Failed: Wallet must be unlocked.");
-
-    UniValue ret(UniValue::VARR);
-
-    //std::set<CStealthAddress>::iterator it;
-    //for (it = pwalletMain->stealthAddresses.begin(); it != pwalletMain->stealthAddresses.end(); ++it)
-    for (CStealthAddress sit : pwalletMain->stealthAddresses) {
-        CStealthAddress* it = &(sit);
-        if (it->scan_secret.size() < 1)
-            continue; // stealth address is not owned
-
-        UniValue obj(UniValue::VOBJ);
-        obj.push_back(Pair("address", it->Encoded()));
-        obj.push_back(Pair("label", it->label));
-        if (fShowSecrets) {
-            obj.push_back(Pair("scan_secret", HexStr(it->scan_secret.begin(), it->scan_secret.end())));
-            obj.push_back(Pair("spend_secret", HexStr(it->spend_secret.begin(), it->spend_secret.end())));
-        }
-        ret.push_back(obj);
-    }
-
-    return ret;
-}
-
-UniValue importstealthaddress(const UniValue& params, bool fHelp)
-{
-    if (fHelp || params.size() < 2 || params.size() > 4)
-        throw runtime_error(
-            "importstealthaddress <scan_secret> <spend_secret> ( \"label\" rescan )\n"
-            "\nImport an owned stealth addresses.\n" +
-            HelpRequiringPassphrase() + "\n"
-
-            "\nArguments:\n"
-            "1. \"scan_secret\"      (string, required) The scan key\n"
-            "2. \"spend_secret\"     (string, required) The spend key\n"
-            "3. \"label\"            (string, optional, default=\"\") An optional label\n"
-            "4. rescan             (boolean, optional, default=true) Rescan the wallet for transactions\n"
-
-            "\nNote: This call can take minutes to complete if rescan is true.\n"
-
-            "\nExamples:\n"
-            "\nImport the stealth address with rescan\n" +
-            HelpExampleCli("importstealthaddress", "\"scankey\" \"spendkey\"") +
-            "\nImport using a label and without rescan\n" +
-            HelpExampleCli("importstealthaddress", "\"scankey\" \"spendkey\" \"testing\" false") +
-            "\nAs a JSON-RPC call\n" +
-            HelpExampleRpc("importstealthaddress", "\"scankey\", \"spendkey\", \"testing\", false"));
-
-    LOCK2(cs_main, pwalletMain->cs_wallet);
-
-    EnsureWalletIsUnlocked();
-
-    std::string sScanSecret  = params[0].get_str();
-    std::string sSpendSecret = params[1].get_str();
-
-    std::string sLabel = "";
-    if (params.size() > 2)
-        sLabel = params[2].get_str();
-
-    // Whether to perform rescan after import
-    bool fRescan = true;
-    if (params.size() > 3)
-        fRescan = params[3].get_bool();
-
-    std::vector<uint8_t> vchScanSecret;
-    std::vector<uint8_t> vchSpendSecret;
-
-    if (IsHex(sScanSecret)) {
-        vchScanSecret = ParseHex(sScanSecret);
-    } else {
-        if (!DecodeBase58(sScanSecret, vchScanSecret))
-            throw runtime_error("Could not decode scan secret as hex or base58.");
-    }
-
-    if (IsHex(sSpendSecret)) {
-        vchSpendSecret = ParseHex(sSpendSecret);
-    } else {
-        if (!DecodeBase58(sSpendSecret, vchSpendSecret))
-            throw runtime_error("Could not decode spend secret as hex or base58.");
-    }
-
-    if (vchScanSecret.size() != 32)
-        throw runtime_error("Scan secret is not 32 bytes.");
-    if (vchSpendSecret.size() != 32)
-        throw runtime_error("Spend secret is not 32 bytes.");
-
-    ec_secret scan_secret;
-    ec_secret spend_secret;
-
-    memcpy(&scan_secret.e[0], &vchScanSecret[0], 32);
-    memcpy(&spend_secret.e[0], &vchSpendSecret[0], 32);
-
-    ec_point scan_pubkey, spend_pubkey;
-    if (SecretToPublicKey(scan_secret, scan_pubkey) != 0)
-        throw runtime_error("Could not get scan public key.");
-
-    if (SecretToPublicKey(spend_secret, spend_pubkey) != 0)
-        throw runtime_error("Could not get spend public key.");
-
-    CStealthAddress sxAddr;
-    sxAddr.label = sLabel;
-    sxAddr.scan_pubkey = scan_pubkey;
-    sxAddr.spend_pubkey = spend_pubkey;
-
-    sxAddr.scan_secret = vchScanSecret;
-    sxAddr.spend_secret = vchSpendSecret;
-
-    std::string res;
-    bool fFound = false;
-    // -- find if address already exists
-    //std::set<CStealthAddress>::iterator it;
-    //for (it = pwalletMain->stealthAddresses.begin(); it != pwalletMain->stealthAddresses.end(); ++it)
-    for (CStealthAddress it : pwalletMain->stealthAddresses) {
-        CStealthAddress &sxAddrIt = const_cast<CStealthAddress&>(it); //*it);
-        if (sxAddrIt.scan_pubkey == sxAddr.scan_pubkey
-            && sxAddrIt.spend_pubkey == sxAddr.spend_pubkey) {
-            if (sxAddrIt.scan_secret.size() < 1) {
-                sxAddrIt.scan_secret = sxAddr.scan_secret;
-                sxAddrIt.spend_secret = sxAddr.spend_secret;
-                fFound = true; // update stealth address with secrets
-                break;
-            }
-
-            res = "Import failed - stealth address exists.";
-            return res;
-        }
-    }
-
-    if (fFound) {
-        res = "Success, updated " + sxAddr.Encoded();
-    } else {
-        pwalletMain->stealthAddresses.insert(sxAddr);
-        res = "Success, imported " + sxAddr.Encoded();
-    }
-
-    if (!pwalletMain->AddStealthAddress(sxAddr))
-        throw runtime_error("Could not save to wallet.");
-
-    if (fRescan)
-        pwalletMain->ScanForWalletTransactions(chainActive.Genesis(), true);
-
-    return res;
 }
 
 static void MaybePushAddress(UniValue & entry, const CTxDestination &dest)

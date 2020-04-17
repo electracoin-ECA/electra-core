@@ -12,7 +12,6 @@
 #include "db.h"
 #include "key.h"
 #include "keystore.h"
-#include "stealth.h"
 #include "primitives/zerocoin.h"
 #include "libzerocoin/Accumulator.h"
 #include "libzerocoin/Denominations.h"
@@ -82,30 +81,6 @@ public:
     }
 };
 
-class CStealthKeyMetadata
-{
-// -- used to get secret for keys created by stealth transaction with wallet locked
-public:
-    CStealthKeyMetadata() {};
-
-    CStealthKeyMetadata(CPubKey pkEphem_, CPubKey pkScan_)
-    {
-        pkEphem = pkEphem_;
-        pkScan = pkScan_;
-    };
-
-    CPubKey pkEphem;
-    CPubKey pkScan;
-
-    ADD_SERIALIZE_METHODS;
-
-    template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
-        READWRITE(pkEphem);
-        READWRITE(pkScan);
-    }
-};
-
 /** Access to the wallet database (wallet.dat) */
 class CWalletDB : public CDB
 {
@@ -126,11 +101,6 @@ public:
     bool WriteKey(const CPubKey& vchPubKey, const CPrivKey& vchPrivKey, const CKeyMetadata& keyMeta);
     bool WriteCryptedKey(const CPubKey& vchPubKey, const std::vector<unsigned char>& vchCryptedSecret, const CKeyMetadata& keyMeta);
     bool WriteMasterKey(unsigned int nID, const CMasterKey& kMasterKey);
-
-    bool WriteStealthKeyMeta(const CKeyID& keyId, const CStealthKeyMetadata& sxKeyMeta);
-    bool EraseStealthKeyMeta(const CKeyID& keyId);
-    bool WriteStealthAddress(const CStealthAddress& sxAddr);
-    bool ReadStealthAddress(CStealthAddress& sxAddr);
 
     bool WriteCScript(const uint160& hash, const CScript& redeemScript);
 

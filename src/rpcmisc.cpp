@@ -244,16 +244,6 @@ public:
         return obj;
     }
 
-    UniValue operator()(const CStealthAddress& stealthID) const
-    {
-        UniValue obj(UniValue::VOBJ);
-
-        obj.pushKV("scanpubkey", HexStr(stealthID.scan_pubkey));
-        obj.pushKV("spendpubkey", HexStr(stealthID.spend_pubkey));
-
-        return obj;
-    }
-
     UniValue operator()(const CScriptID &scriptID) const {
         UniValue obj(UniValue::VOBJ);
         obj.push_back(Pair("isscript", true));
@@ -374,12 +364,10 @@ UniValue validateaddress(const UniValue& params, bool fHelp)
 #endif
 
     CBitcoinAddress address(params[0].get_str());
-    CStealthAddress stealth;
-    bool isStealth = params[0].get_str().length() > 75 && stealth.SetEncoded(params[0].get_str());
-    bool isValid = address.IsValid(); //|| isStealth;
+    bool isValid = address.IsValid();
 
     UniValue ret(UniValue::VOBJ);
-    ret.push_back(Pair("isvalid", isValid || isStealth));
+    ret.push_back(Pair("isvalid", isValid));
     if (isValid) {
         CTxDestination dest = address.Get();
         string currentAddress = address.ToString();
@@ -396,33 +384,7 @@ UniValue validateaddress(const UniValue& params, bool fHelp)
         if (pwalletMain && pwalletMain->mapAddressBook.count(dest))
             ret.push_back(Pair("account", pwalletMain->mapAddressBook[dest].name));
 #endif
-    } else if (isStealth) {
-        CTxDestination dest = stealth;
-        string currentAddress = stealth.Encoded();
-        ret.push_back(Pair("address", currentAddress));
-        // CScript scriptPubKey = GetScriptForDestination(dest);
-        // ret.push_back(Pair("scriptPubKey", HexStr(scriptPubKey.begin(), scriptPubKey.end())));
-
-#ifdef ENABLE_WALLET
-        isminetype mine = ISMINE_NO;
-        bool isMine = false;
-        for (CStealthAddress it : pwalletMain->stealthAddresses) {
-            CStealthAddress &sxAddrIt = const_cast<CStealthAddress&>(it); //*it);
-            if (sxAddrIt.scan_pubkey == stealth.scan_pubkey
-                && sxAddrIt.spend_pubkey == stealth.spend_pubkey) {
-                isMine = sxAddrIt.scan_secret.size() >= 1;
-                stealth = sxAddrIt;
-                break;
-            }
-        }
-        ret.push_back(Pair("ismine", isMine));
-        UniValue detail = boost::apply_visitor(DescribeAddressVisitor(mine), dest);
-        ret.pushKVs(detail);
-        if (isMine)
-            ret.push_back(Pair("label", stealth.label));
-#endif
     }
-
     return ret;
 }
 

@@ -11,7 +11,7 @@
 #include "util.h"
 #include "init.h"
 #include "uint256.h"
-#include "scrypt.h"
+#include "hash.h"
 
 #include <boost/foreach.hpp>
 #include <openssl/aes.h>
@@ -238,13 +238,6 @@ bool CCryptoKeyStore::Unlock(const CKeyingMaterial& vMasterKeyIn)
         for (; mi != mapCryptedKeys.end(); ++mi) {
             const CPubKey& vchPubKey = (*mi).second.first;
             const std::vector<unsigned char>& vchCryptedSecret = (*mi).second.second;
-
-            if (vchCryptedSecret.size() < 1) // key was recieved from stealth/anon txn with wallet locked, will be expanded after this
-            {
-                LogPrintf("Skipping unexpanded key %s.\n", vchPubKey.GetHash().ToString().c_str());
-                continue;
-            }
-
             CKeyingMaterial vchSecret;
             if (!DecryptSecret(vMasterKeyIn, vchCryptedSecret, vchPubKey.GetHash(), vchSecret)) {
                 keyFail = true;
@@ -275,7 +268,6 @@ bool CCryptoKeyStore::Unlock(const CKeyingMaterial& vMasterKeyIn)
 
         uint256 hashSeed;
         if (CWalletDB(pwalletMain->strWalletFile).ReadCurrentSeedHash(hashSeed)) {
-
             uint256 nSeed;
             if (!GetDeterministicSeed(hashSeed, nSeed)) {
                 return error("Failed to read zECA seed from DB. Wallet is probably corrupt.");

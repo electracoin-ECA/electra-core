@@ -89,10 +89,6 @@ public:
     {
         return (exp_addrType == "script");
     }
-    bool operator()(const CStealthAddress &id) const
-    {
-        return (exp_addrType == "stealthAddress");
-    }
     bool operator()(const CNoDestination &no) const
     {
         return (exp_addrType == "none");
