@@ -89,7 +89,7 @@ void ReceiveCoinsDialog::setModel(WalletModel* model)
         // Init address field
         QSettings settings;
         address = settings.value("current_receive_address").toString();
-        if (address.isEmpty())
+        if (address.isEmpty() || !model->getAddressTableModel() || model->getAddressTableModel()->lookupAddress(address) == -1)
             address = getAddress();
         ui->reqAddress->setText(address);
 
