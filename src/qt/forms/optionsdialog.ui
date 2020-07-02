@@ -230,10 +230,10 @@
          <item>
           <widget class="QSpinBox" name="spinBoxStakeSplitThreshold">
            <property name="minimum">
-            <number>1</number>
+            <number>0</number>
            </property>
            <property name="maximum">
-            <number>999999</number>
+            <number>9999999</number>
            </property>
           </widget>
          </item>

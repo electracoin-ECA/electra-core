@@ -3067,7 +3067,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
                 if (outputs > 1) {
                     // Split the stake across the outputs
                     CAmount nShare = nRemaining / outputs;
-                    for (int i = 1; i < outputs; i++) {
+                    for (unsigned int i = 1; i < outputs; i++) {
                         // loop through all but the last one.
                         txNew.vout[i].nValue = nShare;
                         nRemaining -= nShare;

@@ -2314,7 +2314,7 @@ UniValue setstakesplitthreshold(const UniValue& params, bool fHelp)
 
     EnsureWalletIsUnlocked();
 
-    uint64_t nStakeSplitThreshold = params[0].get_int();
+    int64_t nStakeSplitThreshold = params[0].get_int64();
 
     if (nStakeSplitThreshold < 0)
         throw std::runtime_error("Value out of range, min allowed is 0");
