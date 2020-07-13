@@ -104,6 +104,7 @@ bool Solver(const CKeyStore& keystore, const CScript& scriptPubKey, uint256 hash
         return keystore.GetCScript(uint160(vSolutions[0]), scriptSigRet);
 
     case TX_MULTISIG:
+    case TX_MULTISIG_DATA:
         scriptSigRet << OP_0; // workaround CHECKMULTISIG bug
         return (SignN(vSolutions, keystore, hash, nHashType, scriptSigRet));
     }
@@ -259,6 +260,7 @@ static CScript CombineSignatures(const CScript& scriptPubKey, const CTransaction
             return result;
         }
     case TX_MULTISIG:
+    case TX_MULTISIG_DATA:
         return CombineMultisig(scriptPubKey, txTo, nIn, vSolutions, sigs1, sigs2);
     }
 

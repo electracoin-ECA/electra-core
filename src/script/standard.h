@@ -27,15 +27,17 @@ public:
     CScriptID(const uint160& in) : uint160(in) {}
 };
 
-static const unsigned int MAX_OP_RETURN_RELAY = 83;      //!< bytes (+1 for OP_RETURN, +2 for the pushdata opcodes)
+static const unsigned int MAX_OP_RETURN_RELAY = 644;      //!< bytes (+1 for OP_RETURN, +3 for the pushdata opcodes)
 extern unsigned nMaxDatacarrierBytes;
+
+static const unsigned int MAX_MULTISIG_DATA_OP_DROP_SIZE = 80;
 
 /**
  * Mandatory script verification flags that all new blocks must comply with for
  * them to be valid. (but old blocks may not comply with) Currently just P2SH,
  * but in the future other flags may be added, such as a soft-fork to enforce
  * strict DER encoding.
- * 
+ *
  * Failing one of these tests may trigger a DoS ban - see CheckInputs() for
  * details.
  */
@@ -52,7 +54,7 @@ static const uint32_t MANDATORY_SCRIPT_VERIFY_FLAGS =
  * with. However scripts violating these flags may still be present in valid
  * blocks and we must accept those blocks.
  */
-static const uint32_t STANDARD_SCRIPT_VERIFY_FLAGS = 
+static const uint32_t STANDARD_SCRIPT_VERIFY_FLAGS =
     MANDATORY_SCRIPT_VERIFY_FLAGS | SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_NOPS;
 
 /**
@@ -69,6 +71,7 @@ enum txnouttype
     TX_PUBKEYHASH,
     TX_SCRIPTHASH,
     TX_MULTISIG,
+    TX_MULTISIG_DATA,
     TX_NULL_DATA,
     TX_ZEROCOINMINT,
 };
@@ -79,7 +82,7 @@ public:
     friend bool operator<(const CNoDestination &a, const CNoDestination &b) { return true; }
 };
 
-/** 
+/**
  * A txout script template with a specific destination. It is either:
  *  * CNoDestination: no destination set
  *  * CKeyID: TX_PUBKEYHASH destination
