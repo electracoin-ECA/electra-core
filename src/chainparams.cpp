@@ -204,8 +204,12 @@ public:
         genesis.nBits = bnProofOfWorkLimit.GetCompact();
         genesis.nNonce = 61281;
 
-        hashGenesisBlock = genesis.GetHash();
+        uint256 hashTarget = uint256().SetCompact(genesis.nBits);
+        assert(genesis.GetHash() <= hashTarget);
 
+        hashGenesisBlock = genesis.GetHash();
+        //printf("Merkle hash main: %s\n", genesis.hashMerkleRoot.ToString().c_str());
+        //printf("Block hash main: %s\n", hashGenesisBlock.ToString().c_str());
         assert(genesis.hashMerkleRoot == uint256("0xa45c61b17857983dee346573eb46cae28171b98a2595115fea8bc5a9227467dd"));
         assert(hashGenesisBlock == uint256("0x00000f98da995de0ef1665c7d3338687923c1199230a44ecbdb5cec9306e4f4e"));
 
@@ -312,11 +316,17 @@ public:
         nRejectOldSporkKey = 1522454400; //!> Reject old spork key after Saturday, March 31, 2018 12:00:00 AM GMT
 
         //! Modify the testnet genesis block so the timestamp is valid for a later start.
-        //genesis.nTime = 1489479450;
-        genesis.nBits = bnProofOfWorkLimit.GetCompact();
+        genesis.nTime = 1489479450;
+        genesis.nBits = bnProofOfWorkLimit.GetCompact(); //0x1f00ffff;
         genesis.nNonce = 26753;
 
+        uint256 hashTarget = uint256().SetCompact(genesis.nBits);
+        assert(genesis.GetHash() <= hashTarget);
+
         hashGenesisBlock = genesis.GetHash();
+        //printf("Merkle hash test: %s\n", genesis.hashMerkleRoot.ToString().c_str());
+        //printf("Block hash test: %s\n", hashGenesisBlock.ToString().c_str());
+        assert(genesis.hashMerkleRoot == uint256("0xa45c61b17857983dee346573eb46cae28171b98a2595115fea8bc5a9227467dd"));
         assert(hashGenesisBlock == uint256("0x00003892b5c64b1ef04b95e06bb019731ffc9d4031706d8a993e6103e7fc4a2d"));
 
         vFixedSeeds.clear();
@@ -363,11 +373,11 @@ public:
     {
         networkID = CBaseChainParams::REGTEST;
         strNetworkID = "regtest";
-        strNetworkID = "regtest";
         pchMessageStart[0] = 0xa1;
         pchMessageStart[1] = 0xcf;
         pchMessageStart[2] = 0x7e;
         pchMessageStart[3] = 0xac;
+        nDefaultPort = 51479;
         nEnforceBlockUpgradeMajority = 750;
         nRejectBlockOutdatedMajority = 950;
         nToCheckBlockUpgradeMajority = 1000;
@@ -376,12 +386,28 @@ public:
         nTargetSpacing = 48; // 48 seconds
         bnProofOfWorkLimit = ~uint256(0) >> 1;
         genesis.nTime = 1454124731;
-        genesis.nBits = 0x207fffff;
-        genesis.nNonce = 12345;
+        genesis.nBits = bnProofOfWorkLimit.GetCompact(); //0x207fffff;
+        genesis.nNonce = 116379;
+
+        uint256 hashTarget = uint256().SetCompact(genesis.nBits);
+        /*while (true) {
+            uint256 hash = genesis.GetHash();
+            if (hash <= hashTarget) {
+                // Found a solution
+                printf("genesis block found\n   hash: %s\n target: %s\n   bits: %08x\n  nonce: %u\n", hash.ToString().c_str(), hashTarget.ToString().c_str(), genesis.nBits, genesis.nNonce);
+                break;
+            }
+            genesis.nNonce += 1;
+            if ((genesis.nNonce & 0x1ffff) == 0)
+                printf("testing nonce: %u\n", genesis.nNonce);
+        }*/
+        assert(genesis.GetHash() <= hashTarget);
 
         hashGenesisBlock = genesis.GetHash();
-        nDefaultPort = 51479;
-        assert(hashGenesisBlock == uint256("0x96be48710e3fa38c89408487fb33107698c31fb1222693830332c247bd199a06"));
+        //printf("Merkle hash reg: %s\n", genesis.hashMerkleRoot.ToString().c_str());
+        //printf("Block hash reg: %s\n", hashGenesisBlock.ToString().c_str());
+        assert(genesis.hashMerkleRoot == uint256("0xa45c61b17857983dee346573eb46cae28171b98a2595115fea8bc5a9227467dd"));
+        assert(hashGenesisBlock == uint256("0x000042d1284fd6c87a80993fb72f0b946181143f0da425a7771248a97d8acd60"));
 
         vFixedSeeds.clear(); //! Testnet mode doesn't have any fixed seeds.
         vSeeds.clear();      //! Testnet mode doesn't have any DNS seeds.
