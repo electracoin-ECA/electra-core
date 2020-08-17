@@ -273,7 +273,6 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CValidationState& state, const CTransa
 bool AcceptableInputs(CTxMemPool& pool, CValidationState& state, const CTransaction& tx, bool fLimitFree, bool* pfMissingInputs, bool fRejectInsaneFee = false, bool isDSTX = false);
 
 int GetInputAge(CTxIn& vin);
-int GetInputAgeIX(uint256 nTXHash, CTxIn& vin);
 bool GetCoinAge(const CTransaction& tx, unsigned int nTxTime, int nBestHeight, uint64_t& nCoinAge);
 int GetIXConfirmations(uint256 nTXHash);
 
@@ -371,7 +370,7 @@ bool ContextualCheckZerocoinSpendNoSerialCheck(const CTransaction& tx, const lib
 bool IsTransactionInChain(const uint256& txId, int& nHeightTx, CTransaction& tx);
 bool IsTransactionInChain(const uint256& txId, int& nHeightTx);
 bool IsBlockHashInChain(const uint256& hashBlock);
-bool ValidOutPoint(const COutPoint out, int nHeight, uint32_t nTime);
+bool ValidOutPoint(const COutPoint& out, int nHeight, uint32_t nTime);
 void RecalculateZECASpent();
 void RecalculateZECAMinted();
 bool RecalculateECASupply(int nHeightStart);
