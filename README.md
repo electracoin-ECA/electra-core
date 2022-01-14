@@ -5,8 +5,8 @@
         height="130">
 </p>
 
-# Electra new maintener
+# Electra forum
 
-For any request concerning Electra , please contact Electra01 in btctalk:
+
 
 <a href="https://bitcointalk.org/index.php?topic=1848351.0">Electra01</a>
